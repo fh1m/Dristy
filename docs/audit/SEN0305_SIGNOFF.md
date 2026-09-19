@@ -2,12 +2,9 @@
 
 | Check | Result | Firmware SHA |
 |-------|--------|--------------|
-| Build + freshness | PASS | `069cf3c6…` |
-| Flash | PASS | 1,590,904 bytes |
-| Boot Comassless credit | PASS (serial) | |
-| `dristy_mode_stress.py` (2 cycles) | PASS | |
-| `dristy_mode_smoke.py` full matrix | **PASS 18/18** (2.5s timeout, LCD on) | |
-
-Next: menu LCD per-mode visual pass (colour/flow overlays on device).
+| Build + flash | PASS | `ba99adb61d5f78f1ce84f1a2caa55c6a98977c16f1aff685317fd1c2356d0e0e` |
+| `dristy_doctor.py` | PASS (DRISTY 1.0.0) | |
+| `dristy_full_audit.py` 18/18 `mode_ok` | PASS | |
+| Motion / colour / line / flow live counts | PASS | see `FULL_MODE_AUDIT.md` |
 
 Recorded: 2026-09-19

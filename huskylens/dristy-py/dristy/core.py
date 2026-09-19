@@ -422,7 +422,19 @@ class Dristy:
         tag_count = data[off]; off += 1
         blob_count = data[off]; off += 1
         flow_count = data[off]; off += 1
-        target_type = data[off]; off += 1
+        f.n_detections = det_count
+        f.n_tracks = track_count
+        f.n_tags = tag_count
+        f.n_blobs = blob_count
+        f.n_flow = flow_count
+        # New firmware (>=22 bytes) inserts qr/line/motion before target.
+        if len(data) >= 22:
+            f.n_qr = data[off]; off += 1
+            f.line_valid = bool(data[off]); off += 1
+            mp = struct.unpack_from("<H", data, off)[0]; off += 2
+            f.motion_percent = mp / 10.0
+        target_type = data[off] if off < len(data) else 0
+        off += 1
         if off + 4 <= len(data):
             error_x = struct.unpack_from("<h", data, off)[0]; off += 2
             error_y = struct.unpack_from("<h", data, off)[0]; off += 2

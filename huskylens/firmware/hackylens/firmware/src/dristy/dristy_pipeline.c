@@ -62,8 +62,7 @@ static uint64_t g_frame_start_us;
 static uint32_t g_frame_number;
 
 static uint8_t g_gray_buf[320U * 240U];
-static uint8_t g_classical_ready;
-static uint32_t g_last_classical_stream_sequence;
+static uint32_t g_last_commit_stream_sequence;
 
 static void pipeline_sync_camera_geometry(void)
 {
@@ -71,13 +70,6 @@ static void pipeline_sync_camera_geometry(void)
         return;
     g_cam_w = camera_session_width();
     g_cam_h = camera_session_height();
-}
-
-static uint8_t mode_classical_only(const dristy_mode_info_t *info)
-{
-    return info &&
-           (info->capabilities & DRISTY_CAP_CLASSICAL) &&
-           !(info->capabilities & DRISTY_CAP_KPU);
 }
 
 /* ---------------------------------------------------------------------------
@@ -305,6 +297,9 @@ static void rgb565_to_gray(const volatile uint16_t *rgb, uint8_t *gray,
     uint32_t n = (uint32_t)w * (uint32_t)h;
     uint32_t i;
 
+    if(n > (uint32_t)sizeof(g_gray_buf))
+        n = (uint32_t)sizeof(g_gray_buf);
+
     for(i = 0U; i < n; i++)
     {
         uint16_t p = rgb[i];
@@ -407,30 +402,22 @@ static uint8_t classical_uses_camera_stream(dristy_mode_t mode)
 static void process_classical(dristy_result_snapshot_t *snap,
                               const volatile uint16_t *frame_pixels)
 {
-    camera_stream_frame_t frame;
     const uint8_t *gray = NULL;
     uint16_t w = g_cam_w;
     uint16_t h = g_cam_h;
 
-    (void)frame_pixels;
     sync_vision_into_snap(snap);
 
     if(!classical_uses_camera_stream(g_mode))
         return;
-
-    if(!g_classical_ready && g_mode != DRISTY_MODE_COLOUR_TRACK &&
-       g_mode != DRISTY_MODE_COLOUR_SORT && g_mode != DRISTY_MODE_LINE_FOLLOW &&
-       g_mode != DRISTY_MODE_OPTICAL_FLOW)
+    if(!frame_pixels)
         return;
 
-    if(!camera_stream_acquire_latest(&frame) || !frame.pixels)
-        return;
-
-    rgb565_to_gray(frame.pixels, g_gray_buf, w, h);
+    rgb565_to_gray(frame_pixels, g_gray_buf, w, h);
     gray = g_gray_buf;
 
     if(g_mode == DRISTY_MODE_COLOUR_TRACK || g_mode == DRISTY_MODE_COLOUR_SORT)
-        dristy_colour_process_rgb565(frame.pixels, w, h, snap,
+        dristy_colour_process_rgb565(frame_pixels, w, h, snap,
                                      (uint8_t)(g_mode == DRISTY_MODE_COLOUR_SORT));
     if(g_mode == DRISTY_MODE_LINE_FOLLOW)
         dristy_line_process_gray(gray, w, h, snap);
@@ -449,8 +436,89 @@ static void process_classical(dristy_result_snapshot_t *snap,
         if(motion_only.detection_count == 0U)
             snap->detection_count = 0U;
     }
+}
 
-    camera_stream_release(frame.lease_id);
+static uint8_t pipeline_commit_frame(const volatile uint16_t *pixels)
+{
+    uint64_t now_us;
+    const dristy_mode_info_t *mode_info;
+    dristy_result_snapshot_t *snap;
+
+    mode_info = dristy_mode_info(g_mode);
+    if(!mode_info)
+        return 0U;
+
+    dristy_bench_start(DRISTY_BENCH_FRAME_TOTAL);
+    now_us = hal_time_us();
+    snap = dristy_result_bus_begin_write();
+    snap->timestamp_us = now_us;
+    snap->frame_number = ++g_frame_number;
+    snap->mode = g_mode;
+    snap->kpu_active = (mode_info->capabilities & DRISTY_CAP_KPU) ? 1 : 0;
+    g_frame_start_us = now_us;
+
+    if(mode_info->capabilities & DRISTY_CAP_KPU)
+    {
+        dristy_bench_start(DRISTY_BENCH_KPU_INFERENCE);
+        process_kpu_result(snap);
+        dristy_bench_stop(DRISTY_BENCH_KPU_INFERENCE);
+    }
+
+    if(mode_info->capabilities & DRISTY_CAP_CLASSICAL)
+        process_classical(snap, pixels);
+    else
+        sync_vision_into_snap(snap);
+
+    dristy_bench_start(DRISTY_BENCH_TRACKER);
+    if((mode_info->capabilities & DRISTY_CAP_TRACKER) &&
+       snap->detection_count == 0 && g_tracker.track_count > 0)
+        dristy_tracker_predict(&g_tracker);
+
+    {
+        dristy_track_report_t reports[DRISTY_MAX_TRACKS];
+        uint8_t count = dristy_tracker_report(&g_tracker, reports, DRISTY_MAX_TRACKS);
+        snap->track_count = count;
+        for(uint8_t i = 0; i < count; i++)
+        {
+            dristy_result_track_t *rt = &snap->tracks[i];
+            rt->cx = reports[i].cx;
+            rt->cy = reports[i].cy;
+            rt->w  = reports[i].w;
+            rt->h  = reports[i].h;
+            rt->norm_cx = px_to_norm_x((int16_t)(reports[i].cx));
+            rt->norm_cy = px_to_norm_y((int16_t)(reports[i].cy));
+            int32_t fps = g_current_fps_x10 > 0 ? g_current_fps_x10 : 200;
+            rt->vel_norm_x = (int16_t)(
+                (int32_t)reports[i].vx_x10 * 2000 / (int32_t)g_cam_w * fps / 100);
+            rt->vel_norm_y = (int16_t)(
+                (int32_t)reports[i].vy_x10 * 2000 / (int32_t)g_cam_h * fps / 100);
+            rt->id = reports[i].id;
+            rt->cls = reports[i].cls;
+            rt->confidence = reports[i].confidence;
+            rt->coasting = reports[i].coast_count > 0 ? 1 : 0;
+            rt->age_frames = reports[i].age;
+            rt->ttc_ms = 0;
+        }
+    }
+    dristy_bench_stop(DRISTY_BENCH_TRACKER);
+
+    dristy_bench_start(DRISTY_BENCH_TARGET_SELECT);
+    select_primary_target(snap);
+    dristy_bench_stop(DRISTY_BENCH_TARGET_SELECT);
+
+    dristy_bench_start(DRISTY_BENCH_RESULT_BUS);
+    snap->pipeline_us = (uint32_t)(hal_time_us() - g_frame_start_us);
+    snap->fps_x10 = g_current_fps_x10;
+    g_state.last_pipeline_us = snap->pipeline_us;
+    g_state.frame_count = g_frame_number;
+    g_state.fps_x10 = g_current_fps_x10;
+    dristy_result_bus_commit();
+    dristy_bench_stop(DRISTY_BENCH_RESULT_BUS);
+
+    update_fps(now_us);
+    dristy_bench_stop(DRISTY_BENCH_FRAME_TOTAL);
+    dristy_bench_frame_end();
+    return 1U;
 }
 
 /* ---------------------------------------------------------------------------
@@ -480,7 +548,7 @@ uint8_t dristy_pipeline_init(const dristy_pipeline_config_t *config)
         dristy_aruco_config_t acfg = DRISTY_ARUCO_CONFIG_DEFAULT;
         dristy_motion_config_t mcfg = DRISTY_MOTION_CONFIG_DEFAULT;
 
-        g_classical_ready = dristy_aruco_init(&acfg);
+        (void)dristy_aruco_init(&acfg);
         dristy_motion_init(&mcfg);
         dristy_colour_init();
         dristy_line_init();
@@ -528,8 +596,6 @@ void dristy_pipeline_stop(void)
 
 uint8_t dristy_pipeline_tick(void)
 {
-    uint64_t now_us;
-    uint8_t new_result = 0;
     const dristy_mode_info_t *mode_info;
 
     if(!g_state.running)
@@ -541,110 +607,37 @@ uint8_t dristy_pipeline_tick(void)
 
     pipeline_sync_camera_geometry();
 
-    if(mode_classical_only(mode_info))
+    if(!camera_service_capture_ready())
+        return 0;
+
+    /* Live preview already holds the RGB565 lease. Classical work must
+     * ingest that buffer instead of acquire_latest() (which drops READY
+     * slots and blanks the LCD). */
+    if(classical_uses_camera_stream(g_mode))
+        return 0;
+
     {
         camera_stream_status_t stream_st;
 
-        if(!camera_service_capture_ready())
-            return 0;
         camera_stream_status(&stream_st);
         if(!stream_st.have_frame ||
-           stream_st.last_sequence == g_last_classical_stream_sequence)
+           stream_st.last_sequence == g_last_commit_stream_sequence)
             return 0;
+        g_last_commit_stream_sequence = stream_st.last_sequence;
     }
 
-    dristy_bench_start(DRISTY_BENCH_FRAME_TOTAL);
+    return pipeline_commit_frame(NULL);
+}
 
-    now_us = hal_time_us();
-
-    /* Begin new result snapshot */
-    dristy_result_snapshot_t *snap = dristy_result_bus_begin_write();
-    snap->timestamp_us = now_us;
-    snap->frame_number = ++g_frame_number;
-    snap->mode = g_mode;
-    snap->kpu_active = (mode_info->capabilities & DRISTY_CAP_KPU) ? 1 : 0;
-    g_frame_start_us = now_us;
-
-    /* KPU modes: check for completed inference */
-    if(mode_info->capabilities & DRISTY_CAP_KPU)
-    {
-        dristy_bench_start(DRISTY_BENCH_KPU_INFERENCE);
-        process_kpu_result(snap);
-        dristy_bench_stop(DRISTY_BENCH_KPU_INFERENCE);
-    }
-
-    /* Classical modes: process on this tick */
-    if(mode_info->capabilities & DRISTY_CAP_CLASSICAL)
-        process_classical(snap, NULL);
-
-    if(mode_classical_only(mode_info))
-    {
-        camera_stream_status_t stream_st;
-
-        camera_stream_status(&stream_st);
-        g_last_classical_stream_sequence = stream_st.last_sequence;
-    }
-
-    /* Tracker update */
-    dristy_bench_start(DRISTY_BENCH_TRACKER);
-    if((mode_info->capabilities & DRISTY_CAP_TRACKER) &&
-       snap->detection_count == 0 && g_tracker.track_count > 0)
-    {
-        dristy_tracker_predict(&g_tracker);
-    }
-
-    /* Populate tracks from tracker into result bus */
-    {
-        dristy_track_report_t reports[DRISTY_MAX_TRACKS];
-        uint8_t count = dristy_tracker_report(&g_tracker, reports, DRISTY_MAX_TRACKS);
-        snap->track_count = count;
-        for(uint8_t i = 0; i < count; i++)
-        {
-            dristy_result_track_t *rt = &snap->tracks[i];
-            rt->cx = reports[i].cx;
-            rt->cy = reports[i].cy;
-            rt->w  = reports[i].w;
-            rt->h  = reports[i].h;
-            rt->norm_cx = px_to_norm_x((int16_t)(reports[i].cx));
-            rt->norm_cy = px_to_norm_y((int16_t)(reports[i].cy));
-            int32_t fps = g_current_fps_x10 > 0 ? g_current_fps_x10 : 200;
-            rt->vel_norm_x = (int16_t)(
-                (int32_t)reports[i].vx_x10 * 2000 / (int32_t)g_cam_w * fps / 100);
-            rt->vel_norm_y = (int16_t)(
-                (int32_t)reports[i].vy_x10 * 2000 / (int32_t)g_cam_h * fps / 100);
-            rt->id = reports[i].id;
-            rt->cls = reports[i].cls;
-            rt->confidence = reports[i].confidence;
-            rt->coasting = reports[i].coast_count > 0 ? 1 : 0;
-            rt->age_frames = reports[i].age;
-            rt->ttc_ms = 0;
-        }
-    }
-    dristy_bench_stop(DRISTY_BENCH_TRACKER);
-
-    /* Select primary target for control loop */
-    dristy_bench_start(DRISTY_BENCH_TARGET_SELECT);
-    select_primary_target(snap);
-    dristy_bench_stop(DRISTY_BENCH_TARGET_SELECT);
-
-    /* Commit result bus */
-    dristy_bench_start(DRISTY_BENCH_RESULT_BUS);
-    snap->pipeline_us = (uint32_t)(hal_time_us() - g_frame_start_us);
-    snap->fps_x10 = g_current_fps_x10;
-    g_state.last_pipeline_us = snap->pipeline_us;
-    g_state.frame_count = g_frame_number;
-    g_state.fps_x10 = g_current_fps_x10;
-    dristy_result_bus_commit();
-    dristy_bench_stop(DRISTY_BENCH_RESULT_BUS);
-    new_result = 1;
-
-    /* Update FPS counter */
-    update_fps(now_us);
-
-    dristy_bench_stop(DRISTY_BENCH_FRAME_TOTAL);
-    dristy_bench_frame_end();
-
-    return new_result;
+uint8_t dristy_pipeline_ingest_rgb565(const volatile uint16_t *pixels,
+                                      uint16_t width,
+                                      uint16_t height)
+{
+    if(!g_state.running || !pixels || width == 0U || height == 0U)
+        return 0U;
+    g_cam_w = width;
+    g_cam_h = height;
+    return pipeline_commit_frame(pixels);
 }
 
 uint8_t dristy_pipeline_set_mode(dristy_mode_t mode)
@@ -661,12 +654,14 @@ uint8_t dristy_pipeline_set_mode(dristy_mode_t mode)
 
     g_mode = mode;
     g_state.mode = mode;
-    g_last_classical_stream_sequence = 0U;
+    g_last_commit_stream_sequence = 0U;
 
     if(info->model_slot != 0xFFU)
         (void)dristy_model_load_slot(info->model_slot);
     if(g_mode == DRISTY_MODE_OPTICAL_FLOW || g_mode == DRISTY_MODE_LANDING_TARGET)
         dristy_flow_init();
+    if(g_mode == DRISTY_MODE_MOTION_DETECT || g_mode == DRISTY_MODE_DETECT_MOTION)
+        dristy_motion_reset_background();
 
     return 1;
 }

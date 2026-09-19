@@ -362,6 +362,17 @@ int dristy_protocol_handle(uint8_t command,
             response_buf[off++] = snap->tag_count;
             response_buf[off++] = snap->blob_count;
             response_buf[off++] = snap->flow_count;
+            response_buf[off++] = snap->qr_count;
+            response_buf[off++] = snap->line_valid;
+            {
+                const dristy_motion_result_t *mr = dristy_motion_result();
+                uint16_t mp = 0U;
+
+                if(mr)
+                    mp = (uint16_t)(mr->motion_percent * 10.0f);
+                put_u16(response_buf + off, mp);
+                off += 2;
+            }
             /* 1 byte: target type */
             response_buf[off++] = (uint8_t)snap->target.type;
             /* 4 bytes: target error */

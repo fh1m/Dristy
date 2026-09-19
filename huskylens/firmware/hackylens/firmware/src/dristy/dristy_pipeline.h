@@ -92,6 +92,13 @@ void dristy_pipeline_stop(void);
  * Returns 1 if a new result was committed this tick. */
 uint8_t dristy_pipeline_tick(void);
 
+/* Run classical (+ export) on an RGB565 preview frame already leased
+ * by the LCD path. Avoids camera_stream_acquire_latest() stealing the
+ * only READY slot from the display. */
+uint8_t dristy_pipeline_ingest_rgb565(const volatile uint16_t *pixels,
+                                      uint16_t width,
+                                      uint16_t height);
+
 /* Switch vision mode. Safe to call while running — the pipeline
  * will stop the current mode's resources and start the new one.
  * Returns 1 on success, 0 if mode is invalid. */

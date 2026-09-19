@@ -14,6 +14,9 @@
 #include "../../services/vision_result_service.h"
 #include "../../ui/camera_status_view.h"
 #include "../../ui/camera_view.h"
+#include "../vision_mode/vision_mode_controller.h"
+#include "../../dristy/dristy_pipeline.h"
+#include "../../dristy/dristy_modes.h"
 #include "apriltag_detector.h"
 #include "apriltag_config.h"
 #include "apriltag_settings.h"
@@ -101,6 +104,8 @@ static void apriltag_consume_frame(const volatile uint16_t *pixels,
     (void)context;
     (void)sequence;
     (void)apriltag_detector_submit(pixels, width, height);
+    if(vision_mode_controller_active_mode() == DRISTY_MODE_LANDING_TARGET)
+        (void)dristy_pipeline_ingest_rgb565(pixels, width, height);
 }
 
 static void apriltag_compose_overlay(camera_view_present_t *present,

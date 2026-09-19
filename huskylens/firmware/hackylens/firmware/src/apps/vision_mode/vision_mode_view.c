@@ -57,6 +57,7 @@ void vision_mode_view_draw_overlays(const dristy_result_snapshot_t *snap)
 
         draw_box(d->x, d->y, d->w, d->h, DRISTY_COLOR_ACCENT);
         snprintf(label, sizeof(label), "%s %u",
+                 (snap->mode == DRISTY_MODE_MOTION_DETECT) ? "MOTION" :
                  object_detect_label(d->cls),
                  (unsigned)(d->confidence / 10U));
         draw_label(d->x, d->y > 12 ? d->y - 12 : d->y, label, DRISTY_COLOR_ACCENT);
@@ -132,6 +133,7 @@ void vision_mode_view_compose_overlays(camera_view_present_t *present,
 
         camera_view_compose_rects(present, &frame, &rect, 1U, DRISTY_COLOR_ACCENT);
         snprintf(label, sizeof(label), "%s %u",
+                 (snap->mode == DRISTY_MODE_MOTION_DETECT) ? "MOTION" :
                  object_detect_label(d->cls),
                  (unsigned)(d->confidence / 10U));
         camera_view_compose_text_at(present, (uint16_t)d->x,

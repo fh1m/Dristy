@@ -21,6 +21,17 @@ static dristy_mode_t s_active_mode = DRISTY_MODE_INVALID;
 static uint8_t s_stub;
 static uint8_t s_preview_only;
 
+static void classical_consume_frame(const volatile uint16_t *pixels,
+                                    uint16_t width,
+                                    uint16_t height,
+                                    uint32_t sequence,
+                                    void *context)
+{
+    (void)sequence;
+    (void)context;
+    (void)dristy_pipeline_ingest_rgb565(pixels, width, height);
+}
+
 static void classical_compose_overlay(camera_view_present_t *present,
                                       uint16_t width,
                                       uint16_t height,
@@ -45,7 +56,8 @@ static uint8_t mode_uses_classical_lcd(dristy_mode_t mode)
         return 0U;
     if(info->capabilities & DRISTY_CAP_KPU)
         return 0U;
-    if(mode == DRISTY_MODE_APRILTAG || mode == DRISTY_MODE_QR_CODE)
+    if(mode == DRISTY_MODE_APRILTAG || mode == DRISTY_MODE_QR_CODE ||
+       mode == DRISTY_MODE_LANDING_TARGET)
         return 0U;
     return 1U;
 }
@@ -112,7 +124,7 @@ void vision_mode_controller_tick(const hk_input_snapshot_t *input)
         return;
 
     if(s_preview_only)
-        (void)camera_runtime_tick_with_pipeline(input, NULL, NULL,
+        (void)camera_runtime_tick_with_pipeline(input, classical_consume_frame, NULL,
                                                 classical_compose_overlay, NULL);
     else
         vision_mode_bridge_tick(input);

@@ -169,6 +169,13 @@ class Frame:
     flow: List[FlowCell] = field(default_factory=list)
     motion_regions: List[MotionRegion] = field(default_factory=list)
     motion_percent: float = 0.0
+    n_detections: int = 0
+    n_tracks: int = 0
+    n_tags: int = 0
+    n_blobs: int = 0
+    n_flow: int = 0
+    n_qr: int = 0
+    line_valid: bool = False
 
     @property
     def has_target(self) -> bool:
@@ -176,11 +183,15 @@ class Frame:
 
     @property
     def detection_count(self) -> int:
+        if self.n_detections:
+            return self.n_detections
+        if self.motion_regions:
+            return len(self.motion_regions)
         return len(self.tracks)
 
     @property
     def tag_count(self) -> int:
-        return len(self.tags)
+        return self.n_tags if self.n_tags else len(self.tags)
 
 
 @dataclass

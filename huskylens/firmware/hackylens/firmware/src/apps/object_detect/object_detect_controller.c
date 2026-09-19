@@ -8,6 +8,12 @@
 #include "../../core/hk_menu.h"
 #include "../../core/hk_screen.h"
 #include "../vision_mode/vision_mode_shell.h"
+#include "../../dristy/dristy_pipeline.h"
+#include "../../dristy/dristy_modes.h"
+#include "../vision_mode/vision_mode_controller.h"
+#if HK_ENABLE_APP_APRILTAG
+#include "../apriltag/apriltag_detector.h"
+#endif
 #include "../../services/camera_frame.h"
 #include "../../services/camera_session.h"
 #include "../../services/camera_session_preferences.h"
@@ -98,11 +104,21 @@ static void object_consume_frame(const volatile uint16_t *pixels,
                                  uint32_t sequence,
                                  void *context)
 {
-    (void)pixels;
-    (void)width;
-    (void)height;
+    dristy_mode_t mode;
+
     (void)context;
     g_pending_camera_sequence = sequence;
+    mode = vision_mode_controller_active_mode();
+    if(mode == DRISTY_MODE_DETECT_MOTION || mode == DRISTY_MODE_DETECT_ARUCO ||
+       mode == DRISTY_MODE_DETECT_TAG)
+        (void)dristy_pipeline_ingest_rgb565(pixels, width, height);
+#if HK_ENABLE_APP_APRILTAG
+    if(mode == DRISTY_MODE_DETECT_TAG)
+    {
+        (void)apriltag_detector_submit(pixels, width, height);
+        apriltag_detector_service_tick();
+    }
+#endif
 }
 
 static void object_compose_overlay(camera_view_present_t *present,

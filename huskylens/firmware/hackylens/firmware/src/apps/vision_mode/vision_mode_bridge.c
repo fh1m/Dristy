@@ -15,6 +15,7 @@
 #endif
 #if HK_ENABLE_APP_APRILTAG
 #include "../apriltag/apriltag_controller.h"
+#include "../apriltag/apriltag_detector.h"
 #endif
 #if HK_ENABLE_APP_QR_CAMERA
 #include "../qr_camera/qr_camera_controller.h"
@@ -52,8 +53,9 @@ static vision_mode_bridge_kind_t kind_for_mode(dristy_mode_t mode)
     case DRISTY_MODE_QR_CODE:
         return BRIDGE_QR;
     case DRISTY_MODE_DETECT_TAG:
-    case DRISTY_MODE_DETECT_ARUCO:
         return BRIDGE_OBJECT_APRILTAG;
+    case DRISTY_MODE_DETECT_ARUCO:
+        return BRIDGE_OBJECT;
     default:
         return BRIDGE_NONE;
     }
@@ -77,8 +79,10 @@ void vision_mode_bridge_start(dristy_mode_t mode)
         object_detect_controller_enter(NULL);
 #endif
 #if HK_ENABLE_APP_APRILTAG
-    if(g_kind == BRIDGE_APRILTAG || g_kind == BRIDGE_OBJECT_APRILTAG)
+    if(g_kind == BRIDGE_APRILTAG)
         apriltag_controller_enter(NULL);
+    else if(g_kind == BRIDGE_OBJECT_APRILTAG)
+        (void)apriltag_detector_init();
 #endif
 #if HK_ENABLE_APP_FACE_DETECT
     if(g_kind == BRIDGE_FACE)
@@ -103,8 +107,10 @@ void vision_mode_bridge_stop(void)
         face_detect_controller_exit();
 #endif
 #if HK_ENABLE_APP_APRILTAG
-    if(g_kind == BRIDGE_APRILTAG || g_kind == BRIDGE_OBJECT_APRILTAG)
+    if(g_kind == BRIDGE_APRILTAG)
         apriltag_controller_exit();
+    else if(g_kind == BRIDGE_OBJECT_APRILTAG)
+        apriltag_detector_deinit();
 #endif
 #if HK_ENABLE_APP_OBJECT_DETECT
     if(g_kind == BRIDGE_OBJECT || g_kind == BRIDGE_OBJECT_APRILTAG)
@@ -126,7 +132,7 @@ void vision_mode_bridge_tick(const hk_input_snapshot_t *input)
         object_detect_controller_tick(input);
 #endif
 #if HK_ENABLE_APP_APRILTAG
-    if(g_kind == BRIDGE_APRILTAG || g_kind == BRIDGE_OBJECT_APRILTAG)
+    if(g_kind == BRIDGE_APRILTAG)
         apriltag_controller_tick(input);
 #endif
 #if HK_ENABLE_APP_FACE_DETECT
@@ -146,7 +152,7 @@ void vision_mode_bridge_handle_buttons(const hk_input_snapshot_t *input)
         object_detect_controller_handle_buttons(input);
 #endif
 #if HK_ENABLE_APP_APRILTAG
-    if(g_kind == BRIDGE_APRILTAG || g_kind == BRIDGE_OBJECT_APRILTAG)
+    if(g_kind == BRIDGE_APRILTAG)
         apriltag_controller_handle_buttons(input);
 #endif
 #if HK_ENABLE_APP_FACE_DETECT
