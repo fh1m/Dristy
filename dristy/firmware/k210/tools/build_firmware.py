@@ -355,6 +355,16 @@ def generate_micropython_embed(micropython: Path) -> Path:
         env["PATH"] = str(usr_bin) + os.pathsep + env.get("PATH", "")
         cmd.append(f"SHELL={cmake_path(bash)}")
 
+    # make incremental-collects MP_REGISTER_MODULE into genhdr/module/*.module.
+    # A C symbol rename otherwise leaves the old collector (hackylens_user_module)
+    # and an empty new pass. Drop the collector + hashes so embed.mk rescans.
+    for name in ("module", "moduledefs.collected", "moduledefs.collected.hash", "moduledefs.split"):
+        path = work / "genhdr" / name
+        if path.is_dir():
+            shutil.rmtree(path)
+        elif path.is_file():
+            path.unlink()
+
     print(f"[GENERATE] MicroPython embed from {micropython}")
     print("+ " + " ".join(str(part) for part in cmd))
     subprocess.run(cmd, cwd=config_dir, env=env, check=True)

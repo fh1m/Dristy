@@ -45,7 +45,7 @@ Development and hardware testing were performed on the [DFRobot SEN0305 SEN0305]
 
 | Main menu | Live camera | Settings |
 | --- | --- | --- |
-| ![Dristy main menu](docs/images/menu.png) | ![Dristy camera preview with FPS overlay](docs/images/camera.png) | ![Dristy settings](docs/images/settings.png) |
+| ![Dristy main menu](../../../../docs/media/live/01_menu.png) | ![Dristy camera preview with FPS overlay](../../../../docs/media/live/02_camera.png) | ![Dristy settings](../../../../docs/media/live/04_settings.png) |
 
 These 320 x 240 images were captured directly from a running SEN0305 over the firmware's UART screenshot protocol.
 

@@ -1,28 +1,19 @@
-<p align="center">
-  <img src="docs/media/brand/hero.png" alt="Dristy — vision co-processor" width="920"/>
-</p>
+![Dristy — vision co-processor](docs/media/brand/hero.png)
 
 <p align="center">
-  <img src="docs/media/brand/mark.png" alt="Dristy lens mark" width="96"/>
+  <img src="https://img.shields.io/badge/github-fh1m%2FDristy-00A0FF?style=flat-square" alt="GitHub"/>
+  <img src="https://img.shields.io/badge/firmware-v1.0.0-00A0FF?style=flat-square" alt="Firmware 1.0.0"/>
+  <img src="https://img.shields.io/badge/hardware-SEN0305%20OV2640-5AD0FF?style=flat-square" alt="SEN0305"/>
+  <img src="https://img.shields.io/badge/license-MIT-8bd5ca?style=flat-square" alt="MIT"/>
 </p>
 
-<h1 align="center">Dristy</h1>
+# Dristy
 
-<p align="center">
-  <strong>দৃষ্টি</strong> — Bengali for <em>sight</em>.<br/>
-  Open firmware and host API for a Kendryte <strong>K210</strong> camera that thinks for the robot.
-</p>
+**দৃষ্টি** — Bengali for *sight*. Open firmware and host API for a Kendryte **K210** camera that thinks for the robot.
 
-<p align="center">
-  <a href="https://github.com/fh1m/Dristy"><img alt="GitHub" src="https://img.shields.io/badge/github-fh1m%2FDristy-00A0FF?style=flat-square"/></a>
-  <img alt="Firmware 1.0.0" src="https://img.shields.io/badge/firmware-v1.0.0-00A0FF?style=flat-square"/>
-  <img alt="SEN0305" src="https://img.shields.io/badge/hardware-SEN0305%20OV2640-5AD0FF?style=flat-square"/>
-  <img alt="MIT" src="https://img.shields.io/badge/license-MIT-8bd5ca?style=flat-square"/>
-</p>
+![Dristy lens mark](docs/media/brand/mark.png)
 
-<p align="center">
-  <em>Comassless — Muhammad Fahim Faisal &amp; Rakibul Islam</em>
-</p>
+*Comassless — Muhammad Fahim Faisal & Rakibul Islam*
 
 ---
 
@@ -40,7 +31,7 @@ Dristy is that program, running **on the camera itself**:
 
 You are not training a datacenter model. You are giving a 64-pin camera a **job**: look, decide, report.
 
-![From light to a number a robot can use](docs/media/diagrams/pipeline.svg)
+![From light to a number a robot can use](docs/media/diagrams/pipeline.png)
 
 The golden rule: **keep the newest frame, throw the rest away.** A robot that steers on a picture from 200 ms ago is worse than a robot that missed a frame. Dristy is a mailbox, not a queue.
 
@@ -48,44 +39,19 @@ The golden rule: **keep the newest frame, throw the rest away.** A robot that st
 
 ## This README is from a live board
 
-Every LCD picture below was pulled over UART (`HKSHOT`) from a **DFRobot SEN0305** on `/dev/ttyUSB0` on 19 Sep 2026. The overlay text is the device’s own 320×240 UI, scaled 3× with nearest-neighbour so you can read the pixels.
+Every LCD picture below was pulled over UART (`HKSHOT`) from a **DFRobot SEN0305** on `/dev/ttyUSB0` on 19 Sep 2026. Overlay text is the device’s own 320×240 UI, scaled 3× with nearest-neighbour so you can read the pixels.
 
-The boot splash cannot be captured the same way: the debug UART listener starts **after** the 1.8 s logo. The first image is a pixel-geometry reconstruction from `dristy_boot_view.c` (same cyan `0x027F`, same nested square). Everything after it is a real dump of the running LCD.
+The boot splash is captured the same way once debug RX is running: firmware prints `[SHOT] boot splash HKSHOT-ready`, holds the logo ~4 s, and services `HKSHOT` so the BMP transfer freezes that frame.
 
-<table>
-<tr>
-<td width="50%">
+| Boot | Live menu |
+| --- | --- |
+| ![Dristy boot splash](docs/media/live/00_boot.png) | ![Live Dristy vision menu](docs/media/live/01_menu.png) |
+| **Boot** — name, job, version. Then the menu. | **Live menu** — Neural / classical / hybrid modes. `Prev` `Open` `Next` `Page` match the four buttons. |
 
-<img src="docs/media/live/00_boot.png" alt="Dristy boot splash"/>
-
-**Boot** — name, job, version. Then the menu.
-
-</td>
-<td width="50%">
-
-<img src="docs/media/live/01_menu.png" alt="Live Dristy vision menu"/>
-
-**Live menu** — Neural / classical / hybrid modes. `Prev` `Open` `Next` `Page` match the four buttons.
-
-</td>
-</tr>
-<tr>
-<td>
-
-<img src="docs/media/live/02_camera.png" alt="Live camera preview 25.4 FPS"/>
-
-**Camera** — raw OV2640 preview at **25.4 FPS** (dark scene, then we pointed it at a laptop).
-
-</td>
-<td>
-
-<img src="docs/media/live/04_settings.png" alt="Live settings screen"/>
-
-**Settings** — illumination LED, RGB, brightness. Same cyan highlight as the menu.
-
-</td>
-</tr>
-</table>
+| Camera | Settings |
+| --- | --- |
+| ![Live camera preview 25.4 FPS](docs/media/live/02_camera.png) | ![Live settings screen](docs/media/live/04_settings.png) |
+| **Camera** — raw OV2640 preview at **25.4 FPS**. | **Settings** — illumination LED, RGB, brightness. |
 
 ---
 
@@ -97,9 +63,7 @@ Point the module at the world. It does not upload the picture to a PC for “AI.
 
 Live capture, object-detect app, Pascal VOC-20 model from the SD card:
 
-<p align="center">
-  <img src="docs/media/live/03_object.png" alt="Live object detection: laptop boxed as tvmonitor 61 percent" width="720"/>
-</p>
+![Live object detection: laptop boxed as tvmonitor 61 percent](docs/media/live/03_object.png)
 
 That cyan rectangle and the label **`tvmonitor 61%`** were drawn **on the device**. A laptop is close enough to the “tvmonitor” class the tiny YOLO was trained on — which is exactly how you should think about on-device nets: they are **small, opinionated, and honest about confidence**.
 
@@ -107,44 +71,22 @@ Use this when a rover should stop for a person-sized blob, or a drone should kee
 
 ### 2. Follow colour without a neural net
 
-<p align="center">
-  <img src="docs/media/live/07_colour.png" alt="Live colour-track overlay with blob histogram" width="720"/>
-</p>
+![Live colour-track overlay with blob histogram](docs/media/live/07_colour.png)
 
 Colour tracking is **histogram + blobs** on the CPU. No kmodel. On this hardware it ran in the high teens of FPS with **16 live blobs** in a desk audit. Use it for line tape, buoys, landing pads painted a known hue.
 
 ### 3. Notice that something moved
 
-<p align="center">
-  <img src="docs/media/live/08_motion.png" alt="Live motion detection overlay MOTION 99" width="720"/>
-</p>
+![Live motion detection overlay MOTION 99](docs/media/live/08_motion.png)
 
 Motion mode diffs frames and draws regions. This shot reports **MOTION 99** while the scene (and the laptop screen) is changing. Use it as a tripwire: “wake the expensive detector only if the world moved.”
 
 ### 4. Read codes and just look
 
-<table>
-<tr>
-<td width="50%">
-
-<img src="docs/media/live/05_qr.png" alt="Live QR-camera preview of a room at 7.8 FPS"/>
-
-**QR camera** — live room at **7.8 FPS** while the decoder runs. Point at a printed QR and the payload comes back on the same UART.
-
-</td>
-<td width="50%">
-
-**Also on the same firmware**
-
-- AprilTag / ArUco (need a printed marker in view)
-- Line follow (regression on a contrast strip)
-- Optical flow (how the scene is sliding)
-- Face detect (KPU)
-- Hybrid “detect + track” for a lock that survives a missed frame
-
-</td>
-</tr>
-</table>
+| QR camera | Also on the same firmware |
+| --- | --- |
+| ![Live QR-camera preview of a room at 7.8 FPS](docs/media/live/05_qr.png) | AprilTag / ArUco (need a printed marker in view)<br/>Line follow (regression on a contrast strip)<br/>Optical flow (how the scene is sliding)<br/>Face detect (KPU)<br/>Hybrid “detect + track” for a lock that survives a missed frame |
+| **QR camera** — live room at **7.8 FPS** while the decoder runs. Point at a printed QR and the payload comes back on the same UART. | |
 
 ```mermaid
 flowchart LR
@@ -197,7 +139,7 @@ with Dristy("/dev/ttyUSB0") as cam:
 
 Kendryte **K210**: two 64-bit RISC-V cores + a 64-lane conv engine (KPU) + 8 MiB SRAM, 16 MiB SPI flash, no Linux, no MMU. The SEN0305 hangs an OV2640, an ST7789 LCD, three menu buttons, LEDs, SD, and USB-UART off that die.
 
-![K210 SRAM budget](docs/media/diagrams/k210-budget.svg)
+![K210 SRAM budget](docs/media/diagrams/k210-budget.png)
 
 Dristy raises **PLL1 to 400 MHz** at boot (~+33% KPU vs a 300 MHz default) *before* anyone micro-optimises C. Model input widths are multiples of **64** so the DVP can DMA into AI SRAM without the CPU touching pixels.
 

@@ -2,11 +2,14 @@
 #include "capability_owner_runtime.h"
 
 #include <stdio.h>
+#include <stdint.h>
 
 #include "../../../platforms/k210/startup/platform_bootstrap.h"
 
 #include "../controllers/boot_controller.h"
+#include "../controllers/debug_controller.h"
 #include "../controllers/autostart_controller.h"
+#include "hal_time.h"
 #include "../core/hk_menu.h"
 #include "../core/hk_screen.h"
 #include "../services/settings_lights.h"
@@ -68,8 +71,16 @@ void firmware_startup(void)
     illum_led_apply();
     rgb_led_apply();
     boot_controller_startup();
+    debug_console_start_rx();
     boot_controller_show_boot_screen();
+    /* Hold the splash ~4 s and service HKSHOT so a live UART dump can catch
+     * the logo. The BMP transfer itself keeps this frame on the LCD. */
+    printf("[SHOT] boot splash HKSHOT-ready\r\n");
+    for(uint16_t i = 0U; i < 400U; i++)
+    {
+        debug_uart_tick();
+        hal_sleep_ms(10U);
+    }
     topbar_set_sd_mounted(file_mount_if_needed());
     autostart_controller_start();
-    debug_console_start_rx();
 }

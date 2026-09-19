@@ -65,16 +65,14 @@ class DebugConsoleRxTests(unittest.TestCase):
             result.stdout,
         )
 
-    def test_rx_start_is_the_final_startup_action(self) -> None:
+    def test_rx_starts_before_boot_splash(self) -> None:
         startup = (
             ROOT / "firmware" / "src" / "runtime" / "firmware_startup.c"
         ).read_text(encoding="utf-8")
-        autostart = startup.index("autostart_controller_start();")
         rx_start = startup.index("debug_console_start_rx();")
-
-        self.assertLess(autostart, rx_start)
-        body_tail = startup[rx_start + len("debug_console_start_rx();") :]
-        self.assertEqual(body_tail.strip(), "}")
+        boot = startup.index("boot_controller_show_boot_screen();")
+        self.assertLess(rx_start, boot)
+        self.assertIn("debug_uart_tick();", startup)
 
 
 if __name__ == "__main__":

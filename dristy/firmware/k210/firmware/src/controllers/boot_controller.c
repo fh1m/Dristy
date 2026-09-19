@@ -10,7 +10,6 @@
 #include "../core/hk_app_registry.h"
 #include "../core/hk_dispatch.h"
 #include "../core/hk_menu.h"
-#include "hal_time.h"
 #include "../ui/boot_view.h"
 #include "../ui/hk_ui.h"
 #include "sd_event_controller.h"
@@ -57,7 +56,8 @@ void boot_controller_startup(void)
 
 void boot_controller_show_boot_screen(void)
 {
+    /* UART RX is already running. firmware_startup holds this frame and
+     * ticks HKSHOT so the logo can be dumped before the menu replaces it. */
     printf("[LCD] draw static boot logo\r\n");
     boot_view_show_logo();
-    hal_sleep_ms(1800);
 }

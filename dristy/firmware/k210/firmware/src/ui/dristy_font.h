@@ -1,5 +1,5 @@
-#ifndef DRISTY_FONT_H
-#define DRISTY_FONT_H
+#ifndef DRISTY_FONT_API_H
+#define DRISTY_FONT_API_H
 
 #include <stdint.h>
 
