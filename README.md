@@ -13,8 +13,6 @@
 
 ![Dristy lens mark](docs/media/brand/mark.png)
 
-*Comassless — Muhammad Fahim Faisal & Rakibul Islam*
-
 ---
 
 ## Start here (no jargon)
