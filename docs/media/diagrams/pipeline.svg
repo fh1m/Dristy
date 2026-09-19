@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 280" role="img" aria-label="Dristy first-principles pipeline">
+  <rect width="980" height="280" fill="#05070a"/>
+  <text x="24" y="32" fill="#7aa2ff" font-family="ui-monospace, monospace" font-size="13">FROM LIGHT TO A NUMBER A ROBOT CAN USE</text>
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">
+    <rect x="24" y="56" width="150" height="150" rx="10" fill="#0b1220" stroke="#00a0ff" stroke-width="2"/>
+    <text x="99" y="128" text-anchor="middle" fill="#e8eefc" font-weight="700">1. Light</text>
+    <text x="99" y="150" text-anchor="middle" fill="#8b9cc8" font-size="12">lens + OV2640</text>
+
+    <path d="M184 131 L214 131" stroke="#00a0ff" stroke-width="3" marker-end="url(#a)"/>
+
+    <rect x="220" y="56" width="150" height="150" rx="10" fill="#0b1220" stroke="#00a0ff" stroke-width="2"/>
+    <text x="295" y="122" text-anchor="middle" fill="#e8eefc" font-weight="700">2. Pixels</text>
+    <text x="295" y="144" text-anchor="middle" fill="#8b9cc8" font-size="12">320×240 mailbox</text>
+    <text x="295" y="162" text-anchor="middle" fill="#8b9cc8" font-size="12">newest frame only</text>
+
+    <path d="M380 131 L410 131" stroke="#00a0ff" stroke-width="3" marker-end="url(#a)"/>
+
+    <rect x="416" y="56" width="170" height="150" rx="10" fill="#0b1220" stroke="#00a0ff" stroke-width="2"/>
+    <text x="501" y="114" text-anchor="middle" fill="#e8eefc" font-weight="700">3. Look</text>
+    <text x="501" y="136" text-anchor="middle" fill="#8b9cc8" font-size="12">KPU neural net</text>
+    <text x="501" y="154" text-anchor="middle" fill="#8b9cc8" font-size="12">or colour / motion /</text>
+    <text x="501" y="172" text-anchor="middle" fill="#8b9cc8" font-size="12">line / tags on CPU</text>
+
+    <path d="M596 131 L626 131" stroke="#00a0ff" stroke-width="3" marker-end="url(#a)"/>
+
+    <rect x="632" y="56" width="150" height="150" rx="10" fill="#0b1220" stroke="#00a0ff" stroke-width="2"/>
+    <text x="707" y="122" text-anchor="middle" fill="#e8eefc" font-weight="700">4. Answer</text>
+    <text x="707" y="144" text-anchor="middle" fill="#8b9cc8" font-size="12">box, id, error_x</text>
+    <text x="707" y="162" text-anchor="middle" fill="#8b9cc8" font-size="12">shown on LCD</text>
+
+    <path d="M792 131 L822 131" stroke="#00a0ff" stroke-width="3" marker-end="url(#a)"/>
+
+    <rect x="828" y="56" width="128" height="150" rx="10" fill="#072a44" stroke="#5ad0ff" stroke-width="2"/>
+    <text x="892" y="122" text-anchor="middle" fill="#e8eefc" font-weight="700">5. Robot</text>
+    <text x="892" y="144" text-anchor="middle" fill="#8b9cc8" font-size="12">UART 0x55 0xAA</text>
+    <text x="892" y="162" text-anchor="middle" fill="#8b9cc8" font-size="12">Python / ROS 2</text>
+  </g>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#00a0ff"/>
+    </marker>
+  </defs>
+</svg>

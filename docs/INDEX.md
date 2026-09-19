@@ -1,24 +1,31 @@
 # Documentation index
 
-## Start here
+**Start on the GitHub front page:** [`README.md`](../README.md) — first-principles explainer plus **live LCD dumps** from the SEN0305.
 
-- [CONTINUITY.md](CONTINUITY.md) — flash, verify, traps
-- [DRISTY_INVARIANTS.md](DRISTY_INVARIANTS.md) — camera/pipeline rules
+## Operate the board
 
-## Product / architecture
+- [CONTINUITY.md](CONTINUITY.md) — flash, UART reset traps, camera lease
+- [DRISTY_INVARIANTS.md](DRISTY_INVARIANTS.md) — pipeline rules
+- [audit/FULL_MODE_AUDIT.md](audit/FULL_MODE_AUDIT.md) — 18-mode host evidence
+- [audit/SEN0305_SIGNOFF.md](audit/SEN0305_SIGNOFF.md) — last hardware pass
 
-- [../huskylens/docs/DRISTY_ARCHITECTURE.md](../huskylens/docs/DRISTY_ARCHITECTURE.md)
-- [../huskylens/docs/DRISTY_CAPABILITY_PARITY.md](../huskylens/docs/DRISTY_CAPABILITY_PARITY.md)
-- [../huskylens/docs/DRISTY_MODE_READINESS.md](../huskylens/docs/DRISTY_MODE_READINESS.md)
+## Architecture (read after the README)
 
-## Research & gates
+- [../dristy/docs/DRISTY_ARCHITECTURE.md](../dristy/docs/DRISTY_ARCHITECTURE.md)
+- [../dristy/docs/DRISTY_CAPABILITY_PARITY.md](../dristy/docs/DRISTY_CAPABILITY_PARITY.md)
+- [../dristy/docs/DRISTY_MODE_READINESS.md](../dristy/docs/DRISTY_MODE_READINESS.md)
+- [../dristy/docs/HARDWARE_K210_FIRST_PRINCIPLES.md](../dristy/docs/HARDWARE_K210_FIRST_PRINCIPLES.md)
 
-- [../huskylens/docs/GATE0_CHARACTERIZATION.md](../huskylens/docs/GATE0_CHARACTERIZATION.md)
-- [../huskylens/docs/GATE1_FLASH_DUMP.md](../huskylens/docs/GATE1_FLASH_DUMP.md)
-- [../huskylens/docs/GATE2_CUSTOM_FIRMWARE.md](../huskylens/docs/GATE2_CUSTOM_FIRMWARE.md)
-- [../huskylens/docs/HARDWARE_K210_FIRST_PRINCIPLES.md](../huskylens/docs/HARDWARE_K210_FIRST_PRINCIPLES.md)
-- [../huskylens/docs/RESEARCH_NNCASE_KMODEL.md](../huskylens/docs/RESEARCH_NNCASE_KMODEL.md)
+## Research archive
 
-## Evidence
+- [../dristy/docs/GATE0_CHARACTERIZATION.md](../dristy/docs/GATE0_CHARACTERIZATION.md)
+- [../dristy/docs/GATE1_FLASH_DUMP.md](../dristy/docs/GATE1_FLASH_DUMP.md)
+- [../dristy/docs/GATE2_CUSTOM_FIRMWARE.md](../dristy/docs/GATE2_CUSTOM_FIRMWARE.md)
+- [../dristy/docs/RESEARCH_NNCASE_KMODEL.md](../dristy/docs/RESEARCH_NNCASE_KMODEL.md)
+- [../dristy/docs/RESEARCH_SEN0305_HARDWARE.md](../dristy/docs/RESEARCH_SEN0305_HARDWARE.md)
 
-- [../huskylens/docs/evidence/dristy-sen0305-smoke.json](../huskylens/docs/evidence/dristy-sen0305-smoke.json)
+## Media
+
+- Live UART screenshots: [media/live/](media/live/)
+- Brand: [media/brand/](media/brand/)
+- Diagrams: [media/diagrams/](media/diagrams/)

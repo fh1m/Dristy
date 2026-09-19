@@ -25,4 +25,4 @@ Flashed after this table: SHA `ba99adb6…` (FPS gated on camera sequence). Rows
 | DETECT_ARUCO | True | 948.4 | 0 | 0 | 0 | False | 15.2 | Ghost FPS; gated in ba99adb6 |
 | DETECT_MOTION | True | 948.1 | 0 | 0 | 0 | False | 15.2 | Ghost FPS; gated in ba99adb6 |
 
-Raw JSON: `huskylens/docs/evidence/dristy-full-audit.json`
+Raw JSON: `dristy/docs/evidence/dristy-full-audit.json`

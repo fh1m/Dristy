@@ -1,0 +1,117 @@
+schema = 1
+source_roots = [
+  "firmware/include",
+  "firmware/src",
+  "firmware/assets",
+  "firmware/config",
+  "firmware/targets",
+  "boards",
+  "platforms",
+]
+
+[[layers]]
+name = "public-capability"
+paths = [
+  "firmware/include/dristy/capability/**",
+  "firmware/src/capabilities/display.c",
+  "firmware/src/capabilities/external_link.c",
+  "firmware/src/capabilities/input.c",
+  "firmware/src/capabilities/lights.c",
+  "firmware/src/capabilities/time.c",
+]
+
+[[layers]]
+name = "app"
+paths = ["firmware/src/apps/**"]
+
+[[layers]]
+name = "adapter"
+paths = ["firmware/src/adapters/**"]
+
+[[layers]]
+name = "capability-implementation"
+paths = [
+  "firmware/src/capabilities/*.h",
+  "firmware/src/capabilities/capability_core.c",
+  "firmware/src/capabilities/capability_inventory_generated.c",
+  "firmware/src/capabilities/capability_owner.c",
+  "firmware/src/capabilities/input_state.c",
+  "platforms/*/capabilities/**",
+]
+
+[[layers]]
+name = "service"
+paths = ["firmware/src/services/**"]
+
+[[layers]]
+name = "storage"
+paths = ["firmware/src/storage/**"]
+
+[[layers]]
+name = "driver"
+paths = ["firmware/src/drivers/**"]
+
+[[layers]]
+name = "board"
+paths = ["boards/**"]
+
+[[layers]]
+name = "platform-hal"
+paths = ["platforms/*/hal/**"]
+
+[[layers]]
+name = "platform-startup"
+paths = ["platforms/*/startup/**"]
+
+[[layers]]
+name = "runtime"
+paths = ["firmware/src/runtime/**", "firmware/targets/**"]
+
+[[layers]]
+name = "controller"
+paths = ["firmware/src/controllers/**"]
+
+[[layers]]
+name = "ui"
+paths = ["firmware/src/ui/**"]
+
+[[layers]]
+name = "core"
+paths = ["firmware/src/core/**", "firmware/src/internal/**"]
+
+[[layers]]
+name = "config"
+paths = ["firmware/src/config/**", "firmware/config/**"]
+
+[[layers]]
+name = "asset"
+paths = ["firmware/assets/**"]
+
+[[layers]]
+name = "third-party"
+paths = ["firmware/third_party/**"]
+
+[[forbidden_edges]]
+from = ["app"]
+to = ["board", "platform-hal", "driver", "capability-implementation"]
+reason = "apps must use public capabilities or portable boundaries"
+
+[[forbidden_edges]]
+from = ["adapter"]
+to = ["board", "platform-hal", "driver"]
+reason = "language adapters must not implement hardware access"
+
+[[forbidden_edges]]
+from = ["capability-implementation"]
+to = ["app", "adapter"]
+reason = "capability implementations must not depend on consumers"
+
+[[forbidden_edges]]
+from = ["service"]
+to = ["app"]
+reason = "services must not include feature-private headers"
+
+[[forbidden_edges]]
+from = ["board"]
+to = ["app", "adapter", "service", "controller", "ui", "config"]
+reason = "boards must not contain app or product policy"

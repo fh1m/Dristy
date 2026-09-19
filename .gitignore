@@ -7,8 +7,8 @@
 **/.ninja_deps
 
 # Firmware artifacts (keep evidence JSON; release bins via GitHub releases)
-huskylens/firmware/hackylens/dist/*.bin
-huskylens/firmware/hackylens/build/
+dristy/firmware/k210/dist/*.bin
+dristy/firmware/k210/build/
 
 # Python
 __pycache__/
@@ -19,7 +19,7 @@ __pycache__/
 # IDE / agent local
 .cursor/debug-*.log
 .remember/
-huskylens/.git.bak/
+dristy/.git.bak/
 .idea/
 .vscode/
 

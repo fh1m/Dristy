@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+
+# Vendored upstream checkouts and large binaries are fetched, not committed.
+vendor/
+artifacts/firmware/
+*.kfpkg
+*.bin
+*.dump
+artifacts/*.bin
+firmware/dristy/_deps/
+firmware/dristy/build/
+firmware/dristy/env.sh
+firmware/hl-isp-dumper/build/
+firmware/hl-isp-dumper/_deps

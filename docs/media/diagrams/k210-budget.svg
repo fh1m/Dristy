@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 220" role="img" aria-label="K210 memory budget">
+  <rect width="980" height="220" fill="#05070a"/>
+  <text x="24" y="28" fill="#7aa2ff" font-family="ui-monospace, monospace" font-size="13">ONE CHIP, 8 MiB SRAM  SPEND IT ON THE LATEST FRAME</text>
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+    <rect x="24" y="52" width="460" height="56" rx="8" fill="#123a22" stroke="#3dd68c"/>
+    <text x="40" y="76" fill="#e8eefc" font-weight="700">SRAM0  4 MiB</text>
+    <text x="40" y="94" fill="#9ad4b5">code, stacks, classical CV, host protocol</text>
+    <rect x="500" y="52" width="220" height="56" rx="8" fill="#1a2744" stroke="#7aa2ff"/>
+    <text x="516" y="76" fill="#e8eefc" font-weight="700">SRAM1  2 MiB</text>
+    <text x="516" y="94" fill="#9bb0d4">trackers, overlays</text>
+    <rect x="736" y="52" width="220" height="56" rx="8" fill="#3a2208" stroke="#f5a623"/>
+    <text x="752" y="76" fill="#e8eefc" font-weight="700">AI SRAM  2 MiB</text>
+    <text x="752" y="94" fill="#e0c48a">KPU feature maps</text>
+    <text x="24" y="140" fill="#8b9cc8">Flash 16 MiB: firmware ~1 MiB · models 6 MiB · scripts · settings journal</text>
+    <text x="24" y="164" fill="#8b9cc8">KPU clock: stock ~300 MHz ’ Dristy raises PLL1 to 400 MHz (~+33% inference) before any code tricks.</text>
+    <text x="24" y="196" fill="#5ad0ff">Rule: never queue old frames. If the robot is busy, drop. Latency beats a backlog.</text>
+  </g>
+</svg>
