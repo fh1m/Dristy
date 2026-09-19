@@ -29,7 +29,6 @@ void system_tick_controller_tick(const hk_input_snapshot_t *input)
     (void)dristy_pipeline_tick();
     dristy_boot_sync_from_pipeline();
     dristy_uart_bridge_tick();
-    dristy_host_mode_service();
     dristy_led_tick();
 #endif
 #if HK_ENABLE_APP_MICROPYTHON
@@ -37,6 +36,9 @@ void system_tick_controller_tick(const hk_input_snapshot_t *input)
     micropython_runtime_poll();
 #endif
     external_link_service_tick();
+#if HK_ENABLE_DRISTY
+    dristy_host_mode_service();
+#endif
     debug_uart_tick();
     hk_app_registry_background_tick(input);
     if(hk_app_registry_sd_poll_allowed(hk_screen_get()))

@@ -143,3 +143,28 @@ dristy_mode_t vision_mode_controller_active_mode(void)
 {
     return s_active_mode;
 }
+
+uint8_t vision_mode_controller_apply_host_mode(dristy_mode_t mode)
+{
+    dristy_mode_t active = s_active_mode;
+
+    if(active == mode)
+        return 1U;
+    if(hk_screen_get() != SCREEN_VISION_MODE)
+        return 0U;
+    if(vision_mode_bridge_same_route(active, mode))
+    {
+        s_pending_mode = mode;
+        s_active_mode = mode;
+        (void)dristy_pipeline_set_mode(mode);
+        return 1U;
+    }
+    if(s_preview_only && mode_uses_classical_lcd(mode))
+    {
+        s_pending_mode = mode;
+        s_active_mode = mode;
+        (void)dristy_pipeline_set_mode(mode);
+        return 1U;
+    }
+    return 0U;
+}

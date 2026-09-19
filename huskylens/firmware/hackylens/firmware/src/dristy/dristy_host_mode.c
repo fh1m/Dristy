@@ -44,6 +44,10 @@ void dristy_host_mode_service(void)
        vision_mode_controller_active_mode() == mode)
         return;
 
+    if(screen == SCREEN_VISION_MODE &&
+       vision_mode_controller_apply_host_mode(mode))
+        return;
+
     if(screen == SCREEN_VISION_MODE)
         vision_mode_exit();
     else if(screen != SCREEN_MENU)

@@ -12,5 +12,6 @@ void vision_mode_controller_tick(const hk_input_snapshot_t *input);
 void vision_mode_controller_handle_buttons(const hk_input_snapshot_t *input);
 
 dristy_mode_t vision_mode_controller_active_mode(void);
+uint8_t vision_mode_controller_apply_host_mode(dristy_mode_t mode);
 
 #endif

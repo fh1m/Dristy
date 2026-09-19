@@ -59,6 +59,14 @@ static vision_mode_bridge_kind_t kind_for_mode(dristy_mode_t mode)
     }
 }
 
+uint8_t vision_mode_bridge_same_route(dristy_mode_t from, dristy_mode_t to)
+{
+    vision_mode_bridge_kind_t a = kind_for_mode(from);
+    vision_mode_bridge_kind_t b = kind_for_mode(to);
+
+    return (a != BRIDGE_NONE && a == b) ? 1U : 0U;
+}
+
 void vision_mode_bridge_start(dristy_mode_t mode)
 {
     g_mode = mode;
