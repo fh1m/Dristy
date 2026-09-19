@@ -1,0 +1,17 @@
+#ifndef HK_QR_LAYOUT_H
+#define HK_QR_LAYOUT_H
+
+#include "../../config/display_config.h"
+
+#define QR_RESULT_FRAME_X 8U
+#define QR_RESULT_FRAME_Y 32U
+#define QR_RESULT_FRAME_W (HK_DISPLAY_REQUIRED_WIDTH - 16U)
+#define QR_RESULT_FRAME_H 150U
+#define QR_RESULT_TEXT_X 20U
+#define QR_RESULT_TEXT_Y 40U
+#define QR_RESULT_TEXT_COLS 20U
+#define QR_RESULT_TEXT_ROWS 5U
+#define QR_RESULT_STATUS_Y 186U
+#define QR_RESULT_ACTION_Y 212U
+
+#endif

@@ -1,0 +1,28 @@
+{
+  "flash": {
+    "address_bytes": 3,
+    "erase_size": "0x00001000",
+    "maximum_capacity": "0x01000000",
+    "minimum_capacity": "0x01000000",
+    "program_size": "0x00000100"
+  },
+  "partitions": [
+    {
+      "description": "Conformance firmware area; not runtime-qualified",
+      "name": "firmware",
+      "offset": "0x00000000",
+      "required_capacity": "0x01000000",
+      "runtime_writable": false,
+      "size": "0x00800000"
+    },
+    {
+      "description": "Reserved unqualified Cube flash area",
+      "name": "reserved",
+      "offset": "0x00800000",
+      "required_capacity": "0x01000000",
+      "runtime_writable": false,
+      "size": "0x00800000"
+    }
+  ],
+  "schema_version": 1
+}

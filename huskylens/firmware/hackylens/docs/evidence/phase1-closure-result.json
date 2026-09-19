@@ -1,0 +1,25 @@
+{
+  "accepted": true,
+  "baseline_commit": "86142e8b6b2a6b29dd92d8d494a01aea29a01908",
+  "board": "huskylens-sen0305",
+  "elf": {
+    "bss_bytes": 2697312,
+    "data_bytes": 158120,
+    "local_sha256": "a56adafc544767bde60c608aba1ead89480a25eb2413b7ec98b2b53177c0d988",
+    "path": "build/huskylens-sen0305/sdk-full/hackylens_full",
+    "static_ram_bytes": 2855432,
+    "static_ram_delta_bytes": -176,
+    "text_bytes": 1341918
+  },
+  "firmware_version": "0.3.0",
+  "hash_scope": "local-workspace-diagnostic",
+  "image": {
+    "flash_delta_bytes": -4096,
+    "flash_occupied_bytes": 1503232,
+    "local_sha256": "4ee84604430fdfcd3731c2465febe54cb8969766fd7d1c7ce43f615c42c0fe01",
+    "path": "build/huskylens-sen0305/hackylens-full.bin",
+    "raw_bytes": 1500152
+  },
+  "new_heap_allocations_background_tasks_or_queues": [],
+  "schema": 1
+}

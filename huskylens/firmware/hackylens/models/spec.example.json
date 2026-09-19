@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "id": "example-detector",
+  "model_file": "model.kmodel",
+  "labels_file": "labels.txt",
+  "input": {
+    "shape": [
+      1,
+      3,
+      240,
+      320
+    ],
+    "element": "u8",
+    "layout": "chw",
+    "normalization": "none"
+  },
+  "outputs": [
+    {
+      "shape": [
+        1,
+        125,
+        15,
+        20
+      ],
+      "element": "f32",
+      "layout": "chw"
+    }
+  ],
+  "postprocess": "yolo2",
+  "labels": [
+    "class-00",
+    "class-01",
+    "class-02",
+    "class-03",
+    "class-04",
+    "class-05",
+    "class-06",
+    "class-07",
+    "class-08",
+    "class-09",
+    "class-10",
+    "class-11",
+    "class-12",
+    "class-13",
+    "class-14",
+    "class-15",
+    "class-16",
+    "class-17",
+    "class-18",
+    "class-19"
+  ]
+}

@@ -1,0 +1,20 @@
+diff --git a/py/runtime.c b/py/runtime.c
+index bc8f03e..3660d3b 100644
+--- a/py/runtime.c
++++ b/py/runtime.c
+@@ -1361,6 +1361,7 @@ static mp_fun_1_t type_get_iternext(const mp_obj_type_t *type) {
+ // may return MP_OBJ_STOP_ITERATION as an optimisation instead of raise StopIteration()
+ // may also raise StopIteration()
+ mp_obj_t mp_iternext_allow_raise(mp_obj_t o_in) {
++    MICROPY_PORT_ITERNEXT_HOOK
+     const mp_obj_type_t *type = mp_obj_get_type(o_in);
+     if (TYPE_HAS_ITERNEXT(type)) {
+         MP_STATE_THREAD(stop_iteration_arg) = MP_OBJ_NULL;
+@@ -1386,6 +1387,7 @@ mp_obj_t mp_iternext_allow_raise(mp_obj_t o_in) {
+ // will always return MP_OBJ_STOP_ITERATION instead of raising StopIteration() (or any subclass thereof)
+ // may raise other exceptions
+ mp_obj_t mp_iternext(mp_obj_t o_in) {
++    MICROPY_PORT_ITERNEXT_HOOK
+     mp_cstack_check(); // enumerate, filter, map and zip can recursively call mp_iternext
+     const mp_obj_type_t *type = mp_obj_get_type(o_in);
+     if (TYPE_HAS_ITERNEXT(type)) {

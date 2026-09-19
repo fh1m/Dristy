@@ -1,0 +1,23 @@
+{
+  "port": "/dev/ttyUSB0",
+  "scan": [
+    {
+      "baud": 3000000,
+      "knock": true,
+      "raw": "0x2e"
+    }
+  ],
+  "linked": true,
+  "baud": 3000000,
+  "device": {
+    "is_pro": false,
+    "firmware_version_raw": null,
+    "sample": {
+      "result_count": 0,
+      "learned_count": 0,
+      "frame_number": 9,
+      "blocks": [],
+      "arrows": []
+    }
+  }
+}

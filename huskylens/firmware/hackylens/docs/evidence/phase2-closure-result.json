@@ -1,0 +1,29 @@
+{
+  "accepted": true,
+  "automated": {
+    "path": "docs/evidence/phase2-candidate-result.json",
+    "sha256": "02f17cdb9ad3449336d1e60c9501e6b0643281f9a708e275cbc0510cbff89457"
+  },
+  "capability_api": {
+    "stability": "experimental",
+    "version": "0.1.0"
+  },
+  "firmware_version": "0.4.0",
+  "hardware": {
+    "path": "docs/evidence/phase2-hardware-smoke.json",
+    "sha256": "de60e73d57d325f7035a278eb1a7f59de68be12301b133b24cc80c02ffc9a30a"
+  },
+  "impact_review": {
+    "closure_changes": "documentation-and-evidence-only",
+    "runtime_retest_required": false
+  },
+  "implementation": {
+    "commit": "f8b76f441d25a7be02bf8c804736750306b8f2b7",
+    "workflow": {
+      "run_id": 32717823567,
+      "url": "https://github.com/aztechell/hackylens/actions/runs/32717823567"
+    }
+  },
+  "phase": "2.14",
+  "schema": 1
+}

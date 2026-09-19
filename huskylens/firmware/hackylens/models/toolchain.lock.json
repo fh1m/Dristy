@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "compiler": {
+    "name": "kendryte-nncase-ncc",
+    "version": "v0.1.0-rc5",
+    "platform": "linux-x86_64",
+    "url": "https://github.com/kendryte/nncase/releases/download/v0.1.0-rc5/ncc-linux-x86_64.tar.xz",
+    "sha256": "f8838e90b42dfc85daa7dc631545876c5ddfd19e672ed14ea2b208a4f69e78ae",
+    "archive_bytes": 54220128
+  },
+  "target": {
+    "chip": "k210",
+    "container": "kmodel-v3",
+    "inference_type": "uint8",
+    "frontends": [
+      "tflite",
+      "caffe"
+    ]
+  }
+}

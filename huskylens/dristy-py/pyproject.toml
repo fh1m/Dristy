@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dristy"
+version = "0.1.0"
+description = "Python API for the Dristy Vision Co-Processor (HuskyLens K210)"
+requires-python = ">=3.8"
+dependencies = ["pyserial>=3.5"]
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+ros2 = ["rclpy"]
+viewer = ["opencv-python>=4.8", "numpy>=1.24"]
+dev = ["pytest", "pytest-cov"]
+
+[project.scripts]
+dristy-node = "dristy.ros2_node:main"
+dristy-viewer = "dristy.viewer:main"
+
+[tool.setuptools.packages.find]
+include = ["dristy*"]

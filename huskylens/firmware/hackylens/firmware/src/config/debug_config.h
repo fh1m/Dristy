@@ -1,0 +1,7 @@
+#ifndef HK_DEBUG_CONFIG_H
+#define HK_DEBUG_CONFIG_H
+
+#define TERM_MESSAGE_MAX 192
+#define DEBUG_CMD_MAX 32
+
+#endif

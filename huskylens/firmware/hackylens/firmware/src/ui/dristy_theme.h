@@ -1,0 +1,33 @@
+#ifndef DRISTY_THEME_H
+#define DRISTY_THEME_H
+
+#include "dristy_font_1bpp.h"
+
+#define DRISTY_COLOR_BG         0x0000U
+#define DRISTY_COLOR_PANEL      0x0000U
+#define DRISTY_COLOR_PANEL_HI   0x0212U
+#define DRISTY_COLOR_ACCENT     0x027FU
+#define DRISTY_COLOR_ACCENT_DIM 0x0140U
+#define DRISTY_COLOR_AMBER      0x027FU
+#define DRISTY_COLOR_TEXT       0xFFFFU
+#define DRISTY_COLOR_TEXT_DIM   0x7BEFU
+#define DRISTY_COLOR_OK         0x027FU
+#define DRISTY_COLOR_BORDER     0x0140U
+
+#define DRISTY_UI_FONT_W        DRISTY_FONT_W
+#define DRISTY_UI_FONT_H        DRISTY_FONT_H
+#define DRISTY_UI_FONT_SMALL_W  DRISTY_FONT_SMALL_W
+#define DRISTY_UI_FONT_SMALL_H  DRISTY_FONT_SMALL_H
+
+/* 60 + 68 + 4 + 68 + 36 = 236 (+4 pad under header) */
+#define DRISTY_MENU_BAR_H       60U
+#define DRISTY_MENU_FOOTER_H    36U
+#define DRISTY_LIST_ROW_H       68U
+#define DRISTY_LIST_ROW_GAP     4U
+#define DRISTY_LIST_ICON        44U
+#define DRISTY_LIST_Y0          64U
+#define DRISTY_APP_BAR_H        56U
+#define DRISTY_APP_FOOTER_H     28U
+#define DRISTY_CONTENT_Y0       58U
+
+#endif

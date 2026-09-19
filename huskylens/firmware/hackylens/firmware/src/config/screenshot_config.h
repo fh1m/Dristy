@@ -1,0 +1,7 @@
+#ifndef HK_SCREENSHOT_CONFIG_H
+#define HK_SCREENSHOT_CONFIG_H
+
+#define SCREENSHOT_DIR_LONG_NAME "hackylens.screen"
+#define SCREENSHOT_BMP_HEADER_SIZE 54U
+
+#endif

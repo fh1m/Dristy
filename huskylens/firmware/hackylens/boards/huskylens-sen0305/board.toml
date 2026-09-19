@@ -1,0 +1,333 @@
+schema = 1
+id = "huskylens-sen0305"
+platform = "kendryte-k210"
+support = "runtime"
+releaseable = true
+runtime_profile = "hackylens-full"
+
+[[devices]]
+id = "k210"
+kind = "processor"
+driver = "k210-core"
+support = "driver"
+
+[[devices]]
+id = "board-internal-flash"
+kind = "internal-flash"
+driver = "boot-flash"
+support = "driver"
+
+[[devices]]
+id = "st7789v"
+kind = "display"
+driver = "lcd-st7789"
+support = "driver"
+
+[[devices]]
+id = "ov2640"
+kind = "camera"
+driver = "camera-ov2640"
+support = "driver"
+
+[[devices]]
+id = "huskylens-buttons"
+kind = "buttons"
+driver = "huskylens-buttons"
+support = "driver"
+
+[[devices]]
+id = "huskylens-lights"
+kind = "lights"
+driver = "huskylens-lights"
+support = "driver"
+
+[[devices]]
+id = "sd-spi"
+kind = "sd-card"
+driver = "sd-spi"
+support = "driver"
+
+[[devices]]
+id = "grove-uart"
+kind = "external-uart"
+driver = "external-uart"
+support = "driver"
+
+[[devices]]
+id = "grove-i2c"
+kind = "external-i2c"
+driver = "external-i2c"
+support = "driver"
+
+[[routes]]
+id = "lcd-backlight"
+macro = "IO_LCD_BL"
+pin = 24
+function = "timer0-toggle1"
+peripheral = "timer0"
+
+[[routes]]
+id = "lcd-dc"
+macro = "IO_LCD_DC_OR_AUX"
+pin = 18
+function = "gpiohs15"
+peripheral = "gpiohs"
+
+[[routes]]
+id = "lcd-chip-select"
+macro = "IO_LCD_CS"
+pin = 19
+function = "spi0-ss3"
+peripheral = "spi0"
+
+[[routes]]
+id = "lcd-clock"
+macro = "IO_LCD_SCLK"
+pin = 20
+function = "spi0-sclk"
+peripheral = "spi0"
+
+[[routes]]
+id = "lcd-reset"
+macro = "IO_LCD_RST"
+pin = 22
+function = "gpiohs14"
+peripheral = "gpiohs"
+
+[[routes]]
+id = "lcd-mosi"
+macro = "IO_LCD_MOSI"
+pin = 21
+function = "spi0-d0"
+peripheral = "spi0"
+
+[[routes]]
+id = "illumination"
+macro = "IO_LED_ILLUM"
+pin = 23
+function = "timer2-toggle4"
+peripheral = "timer2"
+
+[[routes]]
+id = "rgb-red"
+macro = "IO_RGB_PWM0"
+pin = 32
+function = "timer2-toggle1"
+peripheral = "timer2"
+
+[[routes]]
+id = "rgb-green"
+macro = "IO_RGB_PWM1"
+pin = 30
+function = "timer2-toggle2"
+peripheral = "timer2"
+
+[[routes]]
+id = "rgb-blue"
+macro = "IO_RGB_PWM2"
+pin = 31
+function = "timer2-toggle3"
+peripheral = "timer2"
+
+[[routes]]
+id = "button-left"
+macro = "IO_BTN_LEFT"
+pin = 39
+function = "gpiohs2"
+peripheral = "gpiohs"
+
+[[routes]]
+id = "button-ok"
+macro = "IO_BTN_OK"
+pin = 38
+function = "gpiohs3"
+peripheral = "gpiohs"
+
+[[routes]]
+id = "button-right"
+macro = "IO_BTN_RIGHT"
+pin = 37
+function = "gpiohs4"
+peripheral = "gpiohs"
+
+[[routes]]
+id = "button-back"
+macro = "IO_BTN_BACK"
+pin = 36
+function = "gpiohs5"
+peripheral = "gpiohs"
+
+[[routes]]
+id = "camera-pclk"
+macro = "IO_CAM_PCLK"
+pin = 47
+function = "cmos-pclk"
+peripheral = "dvp"
+
+[[routes]]
+id = "camera-xclk"
+macro = "IO_CAM_XCLK"
+pin = 46
+function = "cmos-xclk"
+peripheral = "dvp"
+
+[[routes]]
+id = "camera-href"
+macro = "IO_CAM_HREF"
+pin = 45
+function = "cmos-href"
+peripheral = "dvp"
+
+[[routes]]
+id = "camera-pwdn"
+macro = "IO_CAM_PWDN"
+pin = 44
+function = "cmos-pwdn"
+peripheral = "dvp"
+
+[[routes]]
+id = "camera-vsync"
+macro = "IO_CAM_VSYNC"
+pin = 43
+function = "cmos-vsync"
+peripheral = "dvp"
+
+[[routes]]
+id = "camera-reset"
+macro = "IO_CAM_RST"
+pin = 42
+function = "cmos-rst"
+peripheral = "dvp"
+
+[[routes]]
+id = "camera-sccb-clock"
+macro = "IO_CAM_SCCB_SCLK"
+pin = 40
+function = "sccb-sclk"
+peripheral = "sccb"
+
+[[routes]]
+id = "camera-sccb-data"
+macro = "IO_CAM_SCCB_SDA"
+pin = 41
+function = "sccb-sda"
+peripheral = "sccb"
+
+[[routes]]
+id = "sd-clock"
+macro = "IO_SD_SCLK"
+pin = 27
+function = "spi1-sclk"
+peripheral = "spi1"
+
+[[routes]]
+id = "sd-data0"
+macro = "IO_SD_D0"
+pin = 28
+function = "spi1-d0"
+peripheral = "spi1"
+
+[[routes]]
+id = "sd-data1"
+macro = "IO_SD_D1"
+pin = 26
+function = "spi1-d1"
+peripheral = "spi1"
+
+[[routes]]
+id = "sd-chip-select"
+macro = "IO_SD_CS"
+pin = 29
+function = "gpiohs6"
+peripheral = "gpiohs"
+
+[defaults]
+lcd_width = 320
+lcd_height = 240
+lcd_spi = 0
+lcd_chip_select = 3
+lcd_spi_hz = 40000000
+gpiohs_lcd_reset = 14
+gpiohs_lcd_dc = 15
+gpiohs_button_left = 2
+gpiohs_button_ok = 3
+gpiohs_button_right = 4
+gpiohs_button_back = 5
+gpiohs_sd_chip_select = 6
+sd_spi = 1
+sd_chip_select = 3
+flash_spi = 3
+flash_chip_select = 0
+led_pwm_device = 2
+led_pwm_channel = 3
+rgb_pwm_device = 2
+rgb_pwm_channel0 = 0
+rgb_pwm_channel1 = 1
+rgb_pwm_channel2 = 2
+screen_pwm_device = 0
+screen_pwm_channel = 0
+pwm_frequency_hz = 20000
+camera_sccb_address = 96
+camera_xclk_hz = 40000000
+camera_sccb_hz = 100000
+camera_max_width = 640
+camera_max_height = 480
+
+[[routes]]
+id = "external-uart-rx"
+macro = "IO_EXTERNAL_UART_R"
+pin = 34
+function = "uart1-rx"
+peripheral = "uart1"
+runtime_mux_group = "external-four-pin-mode"
+
+[[routes]]
+id = "external-uart-tx"
+macro = "IO_EXTERNAL_UART_T"
+pin = 35
+function = "uart1-tx"
+peripheral = "uart1"
+runtime_mux_group = "external-four-pin-mode"
+
+[[routes]]
+id = "external-i2c-clock"
+macro = "IO_EXTERNAL_I2C_R"
+pin = 34
+function = "i2c0-sclk"
+peripheral = "i2c0"
+runtime_mux_group = "external-four-pin-mode"
+
+[[routes]]
+id = "external-i2c-data"
+macro = "IO_EXTERNAL_I2C_T"
+pin = 35
+function = "i2c0-sda"
+peripheral = "i2c0"
+runtime_mux_group = "external-four-pin-mode"
+
+[[connectors]]
+id = "external-four-pin"
+kind = "grove"
+pins = [34, 35]
+protocols = ["uart1", "i2c0"]
+routes = [
+  "external-uart-rx",
+  "external-uart-tx",
+  "external-i2c-clock",
+  "external-i2c-data",
+]
+
+[programming]
+supported = true
+reset_profile = "huskylens-uploader"
+reboot_profile = "uploader-normal"
+isp_stub = "isp_stub/isp_prog_huskylens.bin"
+flash_type = "spi0"
+flash_mode = "qio"
+boot_baud = 115200
+flash_baud = 2000000
+reset_attempts = 15
+
+[programming.usb_detection]
+mode = "vid-any"
+vids = ["1A86", "0403", "067B", "10C4"]

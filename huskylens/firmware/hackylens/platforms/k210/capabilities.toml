@@ -1,0 +1,77 @@
+schema = 1
+platform = "kendryte-k210"
+
+[[capabilities]]
+id = "hackylens.cap.time"
+numeric_id = 65537
+instance = 0
+version = "0.1.0"
+feature_bits = { monotonic-us = 0, sleep-until = 1 }
+limits = { max-sleep-us = { key = 1, value = 300000000 } }
+flags = ["shared"]
+affinity = "any"
+resources = ["processor"]
+routes = []
+provider_source = "platforms/k210/capabilities/time_adapter.c"
+provider_symbol = "hk_k210_time_provider"
+max_leases = 16
+
+[[capabilities]]
+id = "hackylens.cap.input"
+numeric_id = 65538
+instance = 0
+version = "0.1.0"
+feature_bits = { state = 0, events = 1, debounced-buttons = 2 }
+limits = {}
+flags = ["shared"]
+affinity = 0
+resources = ["buttons"]
+routes = ["button-left", "button-ok", "button-right", "button-back"]
+provider_source = "platforms/k210/capabilities/input_adapter.c"
+provider_symbol = "hk_k210_input_provider"
+max_leases = 16
+
+[[capabilities]]
+id = "hackylens.cap.display"
+numeric_id = 65539
+instance = 0
+version = "0.1.0"
+feature_bits = { base-plane = 0, overlay-plane = 1, batch = 2, dirty-regions = 3, rgb565 = 4, borrowed-surface = 5, text = 6 }
+limits = { width = { key = 1, value = 320 }, height = { key = 2, value = 240 } }
+flags = ["shared"]
+affinity = 0
+resources = ["display"]
+routes = ["lcd-backlight", "lcd-dc", "lcd-chip-select", "lcd-clock", "lcd-reset", "lcd-mosi"]
+provider_source = "platforms/k210/capabilities/display_adapter.c"
+provider_symbol = "hk_k210_display_provider"
+max_leases = 2
+
+[[capabilities]]
+id = "hackylens.cap.external-link"
+numeric_id = 65540
+instance = 0
+version = "0.1.0"
+feature_bits = { uart = 0, i2c-controller = 1, i2c-target = 2 }
+limits = {}
+flags = ["exclusive"]
+affinity = 0
+resources = ["external-uart", "external-i2c"]
+routes = ["external-uart-rx", "external-uart-tx", "external-i2c-clock", "external-i2c-data"]
+provider_source = "platforms/k210/capabilities/external_link_adapter.c"
+provider_symbol = "hk_k210_external_link_provider"
+max_leases = 1
+
+[[capabilities]]
+id = "hackylens.cap.lights"
+numeric_id = 65541
+instance = 0
+version = "0.1.0"
+feature_bits = { backlight = 0, illumination = 1, rgb = 2 }
+limits = {}
+flags = ["shared"]
+affinity = 0
+resources = ["lights"]
+routes = ["lcd-backlight", "illumination", "rgb-red", "rgb-green", "rgb-blue"]
+provider_source = "platforms/k210/capabilities/lights_adapter.c"
+provider_symbol = "hk_k210_lights_provider"
+max_leases = 16

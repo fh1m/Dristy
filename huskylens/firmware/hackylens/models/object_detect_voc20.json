@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "id": "object-detect-voc20",
+  "model_file": "model.kmodel",
+  "labels_file": "labels.txt",
+  "upstream": {
+    "repository": "https://github.com/kendryte/nncase",
+    "commit": "f92c085ec6355ae04258df5b76ec7570f784129d",
+    "path": "examples/20classes_yolo/k210/kpu_20classes_example/yolo.kmodel",
+    "url": "https://raw.githubusercontent.com/kendryte/nncase/f92c085ec6355ae04258df5b76ec7570f784129d/examples/20classes_yolo/k210/kpu_20classes_example/yolo.kmodel",
+    "bytes": 1352588,
+    "sha256": "33219de6ffa0b24b8c41a82d09888070c72be68356ca457f3b722d25fdff95ab",
+    "repository_license": "Apache-2.0"
+  },
+  "input": {
+    "shape": [
+      1,
+      3,
+      240,
+      320
+    ],
+    "element": "u8",
+    "layout": "chw",
+    "normalization": "none"
+  },
+  "outputs": [
+    {
+      "shape": [
+        1,
+        125,
+        7,
+        10
+      ],
+      "element": "f32",
+      "layout": "chw"
+    }
+  ],
+  "postprocess": "yolo2",
+  "postprocess_config": {
+    "grid": [
+      10,
+      7
+    ],
+    "anchors": [
+      1.08,
+      1.19,
+      3.42,
+      4.41,
+      6.63,
+      11.38,
+      9.42,
+      5.11,
+      16.62,
+      10.52
+    ],
+    "default_confidence": 0.5,
+    "default_nms": 0.2
+  },
+  "labels": [
+    "aeroplane",
+    "bicycle",
+    "bird",
+    "boat",
+    "bottle",
+    "bus",
+    "car",
+    "cat",
+    "chair",
+    "cow",
+    "diningtable",
+    "dog",
+    "horse",
+    "motorbike",
+    "person",
+    "pottedplant",
+    "sheep",
+    "sofa",
+    "train",
+    "tvmonitor"
+  ]
+}

@@ -1,0 +1,189 @@
+name: Release firmware
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-2022
+    env:
+      HOST_GCC_VERSION: "13.2.0"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/cache@v4
+        with:
+          path: _deps
+          key: hackylens-windows-${{ hashFiles('tools/bootstrap_deps.py') }}
+
+      - name: Install Python dependencies
+        run: python -m pip install pyserial
+
+      - name: Bootstrap pinned dependencies
+        run: python tools/bootstrap_deps.py
+
+      - name: Configure pinned host GCC
+        shell: pwsh
+        run: |
+          $hostGcc = Join-Path $PWD "_deps\host-gcc-$env:HOST_GCC_VERSION\mingw64\bin\gcc.exe"
+          if (-not (Test-Path -LiteralPath $hostGcc)) {
+            throw "bootstrap did not install pinned host GCC at $hostGcc"
+          }
+          $actualVersion = (& $hostGcc -dumpfullversion -dumpversion).Trim()
+          $actualMachine = (& $hostGcc -dumpmachine).Trim()
+          if ($actualVersion -ne $env:HOST_GCC_VERSION) {
+            throw "host GCC version mismatch: expected $env:HOST_GCC_VERSION, got $actualVersion"
+          }
+          if ($actualMachine -ne "x86_64-w64-mingw32") {
+            throw "host GCC target mismatch: expected x86_64-w64-mingw32, got $actualMachine"
+          }
+          Split-Path -Parent $hostGcc |
+            Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "CC=$hostGcc" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Validate source and environment
+        shell: pwsh
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          function Invoke-NativeChecked {
+            & $args[0] $args[1..($args.Count - 1)]
+            if ($LASTEXITCODE -ne 0) {
+              throw "native command failed ($LASTEXITCODE): $($args -join ' ')"
+            }
+          }
+          $diffRange = (Invoke-NativeChecked python tools/ci_diff_range.py).Trim()
+          if (-not $diffRange) {
+            throw "cannot determine explicit git diff range"
+          }
+          Invoke-NativeChecked git diff --check $diffRange
+          Invoke-NativeChecked python tools/check_docs.py
+          Invoke-NativeChecked python tools/check_phase2_evidence.py
+          if (Test-Path -LiteralPath docs/evidence/phase2-hardware-smoke.json) {
+            Invoke-NativeChecked python tools/check_phase2_hardware.py
+          }
+          Invoke-NativeChecked python tools/check_arch.py
+          Invoke-NativeChecked python tools/check_capabilities.py
+          Invoke-NativeChecked python tools/check_board_ports.py --all
+          Invoke-NativeChecked python tools/check_board_ports.py --board sipeed-maix-cube --compile
+          Invoke-NativeChecked python tools/check_env.py
+          Invoke-NativeChecked python tools/run_tests.py
+          Invoke-NativeChecked python tools/run_phase2_contracts.py --write-receipt build/phase2-qualification/contracts.json
+
+      - name: Build capability-absent diagnostics and Cube conformance
+        shell: pwsh
+        run: |
+          function Invoke-NativeChecked {
+            & $args[0] $args[1..($args.Count - 1)]
+            if ($LASTEXITCODE -ne 0) {
+              throw "native command failed ($LASTEXITCODE): $($args -join ' ')"
+            }
+          }
+          $diagnosticCapabilities = @(
+            "hackylens.cap.time",
+            "hackylens.cap.input",
+            "hackylens.cap.display",
+            "hackylens.cap.external-link",
+            "hackylens.cap.lights"
+          )
+          foreach ($capability in $diagnosticCapabilities) {
+            Invoke-NativeChecked python tools/build_firmware.py full --board huskylens-sen0305 --disable-capability $capability
+            Invoke-NativeChecked python tools/check_phase2_resources.py --capture-diagnostic $capability
+          }
+          Invoke-NativeChecked python tools/build_firmware.py conformance --board sipeed-maix-cube
+          Invoke-NativeChecked python tools/check_phase2_resources.py --capture-conformance
+
+      - name: Build firmware without MicroPython and verify isolation
+        shell: pwsh
+        run: |
+          function Invoke-NativeChecked {
+            & $args[0] $args[1..($args.Count - 1)]
+            if ($LASTEXITCODE -ne 0) {
+              throw "native command failed ($LASTEXITCODE): $($args -join ' ')"
+            }
+          }
+          Invoke-NativeChecked python tools/build_firmware.py full --board huskylens-sen0305 --disable-app micropython
+          Invoke-NativeChecked python tools/check_arch.py --verify-build-profile micropython-disabled
+          Invoke-NativeChecked python tools/check_phase2_evidence.py --verify-profile micropython-disabled
+          Invoke-NativeChecked python tools/check_firmware_symbols.py build/huskylens-sen0305/sdk-full/hackylens_full --expect absent
+          Invoke-NativeChecked python tools/check_phase2_resources.py --capture-profile micropython-disabled
+
+      - name: Build full firmware and verify feature symbols
+        shell: pwsh
+        run: |
+          function Invoke-NativeChecked {
+            & $args[0] $args[1..($args.Count - 1)]
+            if ($LASTEXITCODE -ne 0) {
+              throw "native command failed ($LASTEXITCODE): $($args -join ' ')"
+            }
+          }
+          Invoke-NativeChecked python tools/build_firmware.py full --board huskylens-sen0305
+          Invoke-NativeChecked python tools/check_arch.py --verify-build-profile full
+          Invoke-NativeChecked python tools/check_phase2_evidence.py --verify-profile full
+          Invoke-NativeChecked python tools/check_firmware_symbols.py build/huskylens-sen0305/sdk-full/hackylens_full --expect present
+          Invoke-NativeChecked python tools/check_phase2_resources.py --capture-profile full
+          Invoke-NativeChecked python tools/check_phase2_resources.py --check-result
+          Invoke-NativeChecked python tools/check_phase2_exit.py --mode pre-hardware
+          if (Test-Path -LiteralPath docs/evidence/phase2-closure-result.json) {
+            Invoke-NativeChecked python tools/check_phase2_exit.py --mode closure
+          }
+
+      - name: Package release
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          function Invoke-NativeChecked {
+            & $args[0] $args[1..($args.Count - 1)]
+            if ($LASTEXITCODE -ne 0) {
+              throw "native command failed ($LASTEXITCODE): $($args -join ' ')"
+            }
+          }
+          Invoke-NativeChecked python tools/package_release.py --board huskylens-sen0305 --tag "${{ github.ref_name }}"
+
+      - name: Upload release payload
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hackylens-${{ github.ref_name }}
+          path: dist/release/
+          if-no-files-found: error
+
+  release:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: validate
+    runs-on: windows-2022
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: hackylens-${{ github.ref_name }}
+          path: dist/release
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/release/* --verify-tag --generate-notes --title "HackyLens ${{ github.ref_name }}"

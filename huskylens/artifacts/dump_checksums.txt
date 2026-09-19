@@ -1,0 +1,2 @@
+e98ace89567a9f18529d99c051d7104c8761d475753211c1855adde8d4f0c42d  artifacts/stock_flash_dump1.bin
+e98ace89567a9f18529d99c051d7104c8761d475753211c1855adde8d4f0c42d  artifacts/stock_flash_dump2.bin

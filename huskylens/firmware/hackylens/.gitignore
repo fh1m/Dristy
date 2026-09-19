@@ -1,0 +1,10 @@
+_deps/
+build/
+dist/
+screenshots/
+__pycache__/
+*.pyc
+*.bin
+!isp_stub/*.bin
+*.elf
+env.ps1

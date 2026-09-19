@@ -1,0 +1,32 @@
+# Git ignore — Dristy workspace
+
+# Build & deps
+**/_deps/
+**/build/
+**/.ninja_log
+**/.ninja_deps
+
+# Firmware artifacts (keep evidence JSON; release bins via GitHub releases)
+huskylens/firmware/hackylens/dist/*.bin
+huskylens/firmware/hackylens/build/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# IDE / agent local
+.cursor/debug-*.log
+.remember/
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.pem
+*credentials*

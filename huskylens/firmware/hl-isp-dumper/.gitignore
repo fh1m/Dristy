@@ -1,0 +1,5 @@
+/_deps/
+/build/
+/third_party/minsdk/src/isp_stub/
+__pycache__/
+*.pyc

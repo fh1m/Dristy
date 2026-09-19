@@ -1,0 +1,13 @@
+#ifndef HK_CORE_PHOTO_TYPES_H
+#define HK_CORE_PHOTO_TYPES_H
+
+typedef enum
+{
+    PHOTO_FORMAT_BMP24 = 0,
+    PHOTO_FORMAT_RAW565,
+    PHOTO_FORMAT_BMP565,
+    PHOTO_FORMAT_PPM,
+    PHOTO_FORMAT_COUNT,
+} photo_format_t;
+
+#endif

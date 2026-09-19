@@ -1,0 +1,45 @@
+{
+  "format": "HMPY v1; all integers little-endian; wire_hex includes trailing 00 delimiter",
+  "vectors": [
+    {
+      "name": "hello_request",
+      "type": 1,
+      "flags": 0,
+      "request_id": 1,
+      "payload_hex": "",
+      "raw_hex": "484d5059010100000100000000000000a44eb6b8",
+      "crc32": "b8b64ea4",
+      "wire_hex": "07484d5059010101020101010101010105a44eb6b800"
+    },
+    {
+      "name": "upload_chunk_embedded_zero",
+      "type": 17,
+      "flags": 0,
+      "request_id": 305419896,
+      "payload_hex": "000100ff102000",
+      "raw_hex": "484d5059011100007856341207000000000100ff102000f17afc4f",
+      "crc32": "4ffc7af1",
+      "wire_hex": "07484d5059011101067856341207010101020104ff102005f17afc4f00"
+    },
+    {
+      "name": "stdout_utf8_event",
+      "type": 128,
+      "flags": 0,
+      "request_id": 0,
+      "payload_hex": "d09fd180d0b8d0b2d0b5d1820a007461696c",
+      "raw_hex": "484d5059018000000000000012000000d09fd180d0b8d0b2d0b5d1820a007461696c38eba88d",
+      "crc32": "8da8eb38",
+      "wire_hex": "07484d505901800101010101021201010ed09fd180d0b8d0b2d0b5d1820a097461696c38eba88d00"
+    },
+    {
+      "name": "stat_not_found_response",
+      "type": 3,
+      "flags": 3,
+      "request_id": 42,
+      "payload_hex": "050009006e6f7420666f756e64",
+      "raw_hex": "484d5059010303002a0000000d000000050009006e6f7420666f756e64aa19ff29",
+      "crc32": "29ff19aa",
+      "wire_hex": "08484d5059010303022a0101020d0101020502090e6e6f7420666f756e64aa19ff2900"
+    }
+  ]
+}

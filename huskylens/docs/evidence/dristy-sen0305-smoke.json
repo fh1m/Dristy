@@ -1,0 +1,15 @@
+{
+  "board": "huskylens-sen0305",
+  "firmware_sha256": "8659b639fdfd8c5d201ca301de5448bbf2ac613404ae6ed0cf0054bf507c625e",
+  "firmware_bytes": 1590648,
+  "flash_port": "/dev/ttyUSB0",
+  "smoke_run_id": "plan-build2",
+  "stress_run_id": "plan-build",
+  "stress_ok": true,
+  "notes": [
+    "CAMERA_RUNTIME_CLASSICAL for colour/flow/line preview",
+    "Pipeline classical tick gated on camera_stream sequence",
+    "Boot credits Comassless authors",
+    "check_build_freshness.py + dristy_mode_stress.py added"
+  ]
+}

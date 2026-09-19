@@ -1,0 +1,4 @@
+firmware/third_party/micropython/patches/*.patch text eol=lf
+boards/*/flash_layout.json text eol=lf
+docs/evidence/phase1-*.json text eol=lf
+docs/evidence/phase2-*.json text eol=lf

@@ -1,0 +1,12 @@
+#ifndef HK_INPUT_CONFIG_H
+#define HK_INPUT_CONFIG_H
+
+#include <hackylens/capability/input.h>
+
+#define BUTTON_LEFT HK_INPUT_BUTTON_LEFT
+#define BUTTON_OK HK_INPUT_BUTTON_OK
+#define BUTTON_RIGHT HK_INPUT_BUTTON_RIGHT
+#define BUTTON_BACK HK_INPUT_BUTTON_BACK
+#define BUTTON_ALL HK_INPUT_BUTTON_ALL
+
+#endif

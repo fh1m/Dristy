@@ -1,0 +1,9 @@
+Model: Kendryte nncase 20classes_yolo K210 example
+Repository: https://github.com/kendryte/nncase
+Commit: f92c085ec6355ae04258df5b76ec7570f784129d
+Path: examples/20classes_yolo/k210/kpu_20classes_example/yolo.kmodel
+Repository license: Apache-2.0
+SHA-256: 33219de6ffa0b24b8c41a82d09888070c72be68356ca457f3b722d25fdff95ab
+
+The upstream example directory does not contain a separate provenance or
+license statement specifically for the pretrained weights.

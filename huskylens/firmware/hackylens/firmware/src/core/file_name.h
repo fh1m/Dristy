@@ -1,0 +1,7 @@
+#ifndef HK_CORE_FILE_NAME_H
+#define HK_CORE_FILE_NAME_H
+
+#define FILE_NAME_MAX 96U
+#define FILE_LFN_MAX_UNITS 96U
+
+#endif
