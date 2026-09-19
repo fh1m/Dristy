@@ -26,6 +26,6 @@ Compare SHA256 after every successful build.
 Gate characterization and deep dives: [`huskylens/docs/`](../huskylens/docs/)  
 Evidence JSON: [`huskylens/docs/evidence/`](../huskylens/docs/evidence/)
 
-## Workspace rename
+## Workspace path
 
-GitHub repo target: **`fh1m/Dristy`**. Rename host directory `R_n_d-ws` → `dristy_ws` and update docker/IDE paths accordingly.
+Directory: **`Ros_workspaces/dristy_ws`** (renamed from `R_n_d-ws`, 2026-09-19). Update IDE and Docker bind mounts if they still reference the old name.

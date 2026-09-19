@@ -31,7 +31,9 @@ sudo python3 tools/dristy_mode_smoke.py --port /dev/ttyUSB0 --run-id verify
 sudo python3 tools/dristy_mode_stress.py --port /dev/ttyUSB0
 ```
 
-Rename this folder to **`dristy_ws`** when integrating with your host layout
+## Workspace path
+
+Host directory: **`dristy_ws`** under `Ros_workspaces/` (GitHub: [fh1m/Dristy](https://github.com/fh1m/Dristy)).
 (docker bind mounts, IDE workspace).
 
 ## License

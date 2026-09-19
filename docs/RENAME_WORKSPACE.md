@@ -1,11 +1,11 @@
-# Rename workspace folder to `dristy_ws`
+# Workspace folder: `dristy_ws`
 
-From the parent of this directory:
+Renamed from `R_n_d-ws` on 2026-09-19.
 
-```bash
-mv R_n_d-ws dristy_ws
+```text
+/home/fh1m/Envs/dockers/auv-ros2/Ros_workspaces/dristy_ws
 ```
 
-Update Docker bind mounts, IDE workspace paths, and any scripts that reference `R_n_d-ws`.
+If you open this repo from an IDE or container, point the workspace root at **`dristy_ws`**, not `R_n_d-ws`.
 
-Git remote remains: https://github.com/fh1m/Dristy
+Git remote: https://github.com/fh1m/Dristy
