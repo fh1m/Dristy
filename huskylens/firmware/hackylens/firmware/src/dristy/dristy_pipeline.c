@@ -43,7 +43,7 @@ static dristy_tracker_t g_tracker;
 /* NMS config (runtime-adjustable) */
 static dristy_nms_config_t g_nms_config = DRISTY_NMS_CONFIG_DEFAULT;
 
-/* AI model runtime (from HackyLens services) */
+/* AI model runtime (platform SD + KPU services) */
 static ai_model_runtime_t g_ai_runtime;
 static uint8_t g_ai_initialized;
 

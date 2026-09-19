@@ -19,6 +19,7 @@ __pycache__/
 # IDE / agent local
 .cursor/debug-*.log
 .remember/
+huskylens/.git.bak/
 .idea/
 .vscode/
 
