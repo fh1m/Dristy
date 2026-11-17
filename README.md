@@ -227,7 +227,7 @@ CP210x USB-UART: DTR/RTS **reset the K210**. Screenshot and doctor tools hold th
 
 ## Why it exists
 
-Underwater, on Duburi and later Mongla, the expensive lesson was always the same: the computer that flies the robot should not also be the computer that squints at pictures. Every time vision shared a CPU with control, a slow frame became a late thruster command. Dristy is that lesson moved into a $20 camera: the K210 does the looking, and the robot gets a short answer it can act on in the same loop.
+Underwater, on Duburi and later Mongla, the expensive lesson was always the same: the computer that flies the robot should not also be the computer that squints at pictures. Every time vision shared a CPU with control, a slow frame became a late thruster command. Dristy is that lesson moved into an off-the-shelf DFRobot camera: the K210 does the looking, and the robot gets a short answer it can act on in the same loop.
 
 Three things building it taught:
 
