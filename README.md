@@ -1,4 +1,4 @@
-![Dristy — vision co-processor](docs/media/brand/hero.png)
+![Dristy: open firmware for a K210 camera that does the seeing](docs/media/brand/banner.png)
 
 <p align="center">
   <img src="https://img.shields.io/badge/github-fh1m%2FDristy-00A0FF?style=flat-square" alt="GitHub"/>
@@ -116,6 +116,8 @@ A flight controller or Raspberry Pi **can** run vision. Usually you should not m
 
 Dristy is the same idea as a GPS module: **a specialist that speaks a short protocol.**
 
+![One tracked object on the wire is 22 bytes; a frame is 153,600](docs/media/diagrams/packet.svg)
+
 USB `/dev/ttyUSB0` is the debug and screenshot port (this README). The Grove UART on the side of the SEN0305 is the **robot** port (115200 8N1, same framing).
 
 Framing is the industry-common `0x55 0xAA` camera packet. Stock commands `0x20–0x3E` still knock. Dristy commands `0x40–0x7F` set mode, read tracks, blobs, flow, motion, LCD, LEDs.
@@ -138,6 +140,8 @@ with Dristy("/dev/ttyUSB0") as cam:
 Kendryte **K210**: two 64-bit RISC-V cores + a 64-lane conv engine (KPU) + 8 MiB SRAM, 16 MiB SPI flash, no Linux, no MMU. The SEN0305 hangs an OV2640, an ST7789 LCD, three menu buttons, LEDs, SD, and USB-UART off that die.
 
 ![K210 SRAM budget](docs/media/diagrams/k210-budget.png)
+
+![The zero-copy path: the DVP writes the LCD copy and the neural-net copy at once](docs/media/diagrams/zerocopy.svg)
 
 Dristy raises **PLL1 to 400 MHz** at boot (~+33% KPU vs a 300 MHz default) *before* anyone micro-optimises C. Model input widths are multiples of **64** so the DVP can DMA into AI SRAM without the CPU touching pixels.
 
@@ -220,6 +224,16 @@ CP210x USB-UART: DTR/RTS **reset the K210**. Screenshot and doctor tools hold th
 | [`AGENTS.md`](AGENTS.md) | How an agent should verify on hardware |
 
 ---
+
+## Why it exists
+
+Underwater, on Duburi and later Mongla, the expensive lesson was always the same: the computer that flies the robot should not also be the computer that squints at pictures. Every time vision shared a CPU with control, a slow frame became a late thruster command. Dristy is that lesson moved into a $20 camera: the K210 does the looking, and the robot gets a short answer it can act on in the same loop.
+
+Three things building it taught:
+
+- **Fresh beats complete.** A mailbox that drops frames is better than a queue that keeps them. The same bug cost Mongla 396 ms of staleness before a keep-up thread fixed it.
+- **Know your memory before your model.** 8 MiB is the whole world here. Every buffer in the table above was placed by hand before a single model was chosen.
+- **Prove it on the board.** Every screenshot in this README came off the device over UART, not out of a renderer.
 
 ## Status
 

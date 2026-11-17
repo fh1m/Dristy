@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" font-family="IBM Plex Sans, system-ui, sans-serif">
+<rect width="960" height="330" rx="10" fill="#0b0e12"/>
+<text x="32" y="44" fill="#eef1f5" font-size="18" font-weight="600">The zero-copy trick: one exposure, two outputs, no CPU</text>
+<text x="32" y="68" fill="#8a94a3" font-size="13">The DVP writes the LCD copy and the neural-net copy at the same time. The CPU never touches a pixel.</text>
+<rect x="32" y="120" width="150" height="80" rx="6" fill="#13202c" stroke="#2a3a4a"/><text x="107" y="155" fill="#eef1f5" text-anchor="middle" font-size="15">OV2640</text><text x="107" y="178" fill="#8a94a3" text-anchor="middle" font-size="12">320×240</text>
+<rect x="250" y="120" width="140" height="80" rx="6" fill="#13202c" stroke="#00a0ff"/><text x="320" y="155" fill="#00a0ff" text-anchor="middle" font-size="15">DVP</text><text x="320" y="178" fill="#8a94a3" text-anchor="middle" font-size="12">DMA engine</text>
+<path d="M182 160 H250" stroke="#8a94a3" stroke-width="2"/>
+<path d="M390 145 C450 145 450 116 510 116" stroke="#8a94a3" stroke-width="2" fill="none"/>
+<path d="M390 175 C450 175 450 230 510 230" stroke="#00a0ff" stroke-width="2" fill="none"/>
+<rect x="510" y="86" width="230" height="64" rx="6" fill="#13202c" stroke="#2a3a4a"/><text x="625" y="114" fill="#eef1f5" text-anchor="middle" font-size="14">RGB565, 300 KB double buffer</text><text x="625" y="134" fill="#8a94a3" text-anchor="middle" font-size="12">mailbox slots → ST7789 LCD</text>
+<rect x="510" y="198" width="230" height="64" rx="6" fill="#13202c" stroke="#00a0ff"/><text x="625" y="226" fill="#eef1f5" text-anchor="middle" font-size="14">RGB888 planar, 225 KB</text><text x="625" y="246" fill="#8a94a3" text-anchor="middle" font-size="12">AI SRAM at 0x40600000</text>
+<path d="M740 230 H800" stroke="#00a0ff" stroke-width="2"/>
+<rect x="800" y="198" width="130" height="64" rx="6" fill="#1c2a1a" stroke="#3b5a35"/><text x="865" y="226" fill="#8dff6a" text-anchor="middle" font-size="14">KPU</text><text x="865" y="246" fill="#8a94a3" text-anchor="middle" font-size="12">230 GMAC/s</text>
+<text x="32" y="300" fill="#8a94a3" font-size="13">Why input widths are multiples of 64: the KPU can then read the planes by DMA straight from where the DVP wrote them.</text>
+</svg>
