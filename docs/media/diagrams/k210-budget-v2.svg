@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 250" font-family="IBM Plex Sans, system-ui, sans-serif">
+<rect width="960" height="250" rx="10" fill="#0b0e12"/>
+<text x="32" y="44" fill="#eef1f5" font-size="18" font-weight="600">8 MiB, every byte placed by hand</text>
+<g font-size="12" fill="#0b0e12">
+<rect x="32" y="80" width="448" height="56" fill="#2f6fa8"/><text x="44" y="112" fill="#eef1f5">SRAM0, 4 MiB: firmware, camera double buffer (300 KB), model weights</text>
+<rect x="480" y="80" width="224" height="56" fill="#3d5f86"/><text x="492" y="112" fill="#eef1f5">SRAM1, 2 MiB: runtime, tracking</text>
+<rect x="704" y="80" width="224" height="56" fill="#1c6b4a"/><text x="716" y="104" fill="#eef1f5">AI SRAM, 2 MiB</text><text x="716" y="122" fill="#c8f0d8">KPU feature maps</text>
+</g>
+<g font-size="13" fill="#8a94a3">
+<text x="32" y="172">Model input widths are multiples of 64, so the DVP writes the 225 KB RGB888 copy straight where the KPU reads it.</text>
+<text x="32" y="196">PLL1 raised to 400 MHz at boot: 230 GMAC/s on the KPU, about a third more than the stock clock.</text>
+</g></svg>

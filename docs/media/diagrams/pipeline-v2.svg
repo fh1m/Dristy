@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 230" font-family="IBM Plex Sans, system-ui, sans-serif">
+<rect width="960" height="230" rx="10" fill="#0b0e12"/>
+<text x="32" y="44" fill="#eef1f5" font-size="18" font-weight="600">From light to a number a robot can use</text>
+<g font-size="14" text-anchor="middle">
+<rect x="32" y="80" width="160" height="80" rx="8" fill="#13202c" stroke="#2a3a4a"/><text x="112" y="114" fill="#eef1f5">Light</text><text x="112" y="136" fill="#8a94a3" font-size="12">OV2640 lens</text>
+<rect x="216" y="80" width="160" height="80" rx="8" fill="#13202c" stroke="#2a3a4a"/><text x="296" y="114" fill="#eef1f5">Pixels</text><text x="296" y="136" fill="#8a94a3" font-size="12">320×240 in SRAM</text>
+<rect x="400" y="80" width="160" height="80" rx="8" fill="#101a24" stroke="#00a0ff"/><text x="480" y="114" fill="#00a0ff">Look</text><text x="480" y="136" fill="#8a94a3" font-size="12">KPU net or classic CV</text>
+<rect x="584" y="80" width="160" height="80" rx="8" fill="#13202c" stroke="#2a3a4a"/><text x="664" y="114" fill="#eef1f5">Answer</text><text x="664" y="136" fill="#8a94a3" font-size="12">id, x, y, size</text>
+<rect x="768" y="80" width="160" height="80" rx="8" fill="#1c2a1a" stroke="#3b5a35"/><text x="848" y="114" fill="#8dff6a">Robot</text><text x="848" y="136" fill="#8a94a3" font-size="12">UART, 115200 8N1</text>
+</g>
+<g stroke="#8a94a3" stroke-width="2"><path d="M192 120H216M376 120H400M560 120H584M744 120H768"/></g>
+<text x="32" y="198" fill="#8a94a3" font-size="13">Newest frame wins: a mailbox, not a queue. A frame that arrives while the KPU is busy replaces the old one.</text>
+</svg>

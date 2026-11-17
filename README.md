@@ -11,7 +11,6 @@
 
 **দৃষ্টি** — Bengali for *sight*. Open firmware and host API for a Kendryte **K210** camera that thinks for the robot.
 
-![Dristy lens mark](docs/media/brand/mark.png)
 
 ---
 
@@ -29,7 +28,7 @@ Dristy is that program, running **on the camera itself**:
 
 You are not training a datacenter model. You are giving a 64-pin camera a **job**: look, decide, report.
 
-![From light to a number a robot can use](docs/media/diagrams/pipeline.png)
+![From light to a number a robot can use](docs/media/diagrams/pipeline-v2.svg)
 
 The golden rule: **keep the newest frame, throw the rest away.** A robot that steers on a picture from 200 ms ago is worse than a robot that missed a frame. Dristy is a mailbox, not a queue.
 
@@ -139,7 +138,7 @@ with Dristy("/dev/ttyUSB0") as cam:
 
 Kendryte **K210**: two 64-bit RISC-V cores + a 64-lane conv engine (KPU) + 8 MiB SRAM, 16 MiB SPI flash, no Linux, no MMU. The SEN0305 hangs an OV2640, an ST7789 LCD, three menu buttons, LEDs, SD, and USB-UART off that die.
 
-![K210 SRAM budget](docs/media/diagrams/k210-budget.png)
+![K210 SRAM budget](docs/media/diagrams/k210-budget-v2.svg)
 
 ![The zero-copy path: the DVP writes the LCD copy and the neural-net copy at once](docs/media/diagrams/zerocopy.svg)
 
