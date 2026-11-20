@@ -62,7 +62,7 @@ Live capture, object-detect app, Pascal VOC-20 model from the SD card:
 
 ![Live object detection: laptop boxed as tvmonitor 61 percent](docs/media/live/03_object.png)
 
-That cyan rectangle and the label **`tvmonitor 61%`** were drawn **on the device**. A laptop is close enough to the “tvmonitor” class the tiny YOLO was trained on — which is exactly how you should think about on-device nets: they are **small, opinionated, and honest about confidence**.
+That cyan rectangle and the label **`tvmonitor 61%`** were drawn **on the device**. A laptop labelled with the VOC “tvmonitor” class shows the model's class-set limits. This is one recorded output, not an accuracy evaluation or evidence that the displayed score is a calibrated probability.
 
 Use this when a rover should stop for a person-sized blob, or a drone should keep a known object in frame.
 
@@ -105,12 +105,12 @@ flowchart LR
 
 ## Why a co-processor (first principles)
 
-A flight controller or Raspberry Pi **can** run vision. Usually you should not make it.
+A flight controller or Raspberry Pi **can** run vision. A co-processor is useful when image transport and processing compete with another constrained workload; the trade-off is a smaller model and memory budget on the camera.
 
 | If the brain does vision | If Dristy does vision |
 |---|---|
 | It must ingest JPEG/YUV at tens of FPS | It sends **a few bytes**: id, x, y, size |
-| A stall in OpenCV stalls attitude control | The robot loop stays boring and fast |
+| Poorly coupled vision and control loops can transfer delays between tasks | Offloading can reduce that coupling; it does not guarantee control deadlines |
 | You debug “why is my PID late?” | You debug “is the box on the LCD?” |
 
 Dristy is the same idea as a GPS module: **a specialist that speaks a short protocol.**
@@ -150,7 +150,7 @@ One camera owner at a time. The LCD preview and the neural net **share** the sam
 
 ## Measured on this SEN0305
 
-Host `SET_MODE` / `GET_RESULT` audit, desk scene, firmware SHA `ba99adb6…`. `mode_ok` means the protocol handshake worked. Zeros mean the **scene** had no tag/face/QR, not that the mode is dead. Colour, line, flow, and motion produced live counts.
+Host `SET_MODE` / `GET_RESULT` audit, desk scene, firmware SHA `ba99adb6…`. `mode_ok` establishes a protocol handshake, not algorithmic correctness. Zero tag/face/QR hits in this scene do not establish a positive detection case. Colour, line, flow and motion produced live outputs; this was not a calibrated accuracy evaluation.
 
 | Job | Mode | What we saw |
 |---|---|---|
@@ -160,7 +160,7 @@ Host `SET_MODE` / `GET_RESULT` audit, desk scene, firmware SHA `ba99adb6…`. `m
 | Line | `LINE_FOLLOW` | line valid, ~20 FPS |
 | Flow | `OPTICAL_FLOW` | flow cell live |
 | Motion | `MOTION_DETECT` | **55%** then the LCD shot above at 99 |
-| Tags / QR / face | those modes | mode_ok; 0 hits until you show a marker/face |
+| Tags / QR / face | those modes | mode_ok; 0 hits in the recorded scene, so this row does not validate a positive case |
 | LCD menu | buttons + `HKSHOT` | this README |
 
 Full table: [`docs/audit/FULL_MODE_AUDIT.md`](docs/audit/FULL_MODE_AUDIT.md).
@@ -226,16 +226,16 @@ CP210x USB-UART: DTR/RTS **reset the K210**. Screenshot and doctor tools hold th
 
 ## Why it exists
 
-Underwater, on Duburi and later Mongla, the expensive lesson was always the same: the computer that flies the robot should not also be the computer that squints at pictures. Every time vision shared a CPU with control, a slow frame became a late thruster command. Dristy is that lesson moved into an off-the-shelf DFRobot camera: the K210 does the looking, and the robot gets a short answer it can act on in the same loop.
+Duburi and later Mongla perception work made capture age, transport and scheduling boundaries important design questions. Dristy explores one response in an off-the-shelf DFRobot camera: the K210 processes images and the robot receives a compact result. It does not follow that every shared CPU must delay control, or that an offloaded result is automatically fresh enough. The hardware captures here document bench behaviour, not a vehicle deployment.
 
 Three things building it taught:
 
-- **Fresh beats complete.** A mailbox that drops frames is better than a queue that keeps them. The same bug cost Mongla 396 ms of staleness before a keep-up thread fixed it.
+- **Measure freshness.** A latest-frame slot can avoid queued stale observations when the consumer needs current state. A separate Mongla camera-path experiment reported 396.1 → 16.9 ms of kernel-stamp age under a controlled stall; that is not a latency measurement of Dristy.
 - **Know your memory before your model.** 8 MiB is the whole world here. Every buffer in the table above was placed by hand before a single model was chosen.
 - **Prove it on the board.** Every screenshot in this README came off the device over UART, not out of a renderer.
 
 ## Status
 
-**Pause (Sep 2026).** Firmware on the SEN0305 boots as Dristy 1.0.0, menu and classical/neural modes are exercised live, host SET_MODE is 18/18 `mode_ok`. Still open later: a dedicated classify kmodel, user custom detect model on device, prettier overlay fonts in colour mode.
+**Pause (Sep 2026).** Firmware on the SEN0305 boots as Dristy 1.0.0. The published evidence includes menu captures and selected classical/VOC outputs; 18/18 host `SET_MODE` acknowledgements do not positively validate every mode. Still open: a dedicated classify kmodel, a user custom detection model on device and overlay-font improvements. No new hardware test was performed for this README clarification.
 
 MIT — see [LICENSE](LICENSE).
